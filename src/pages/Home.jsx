@@ -4,6 +4,7 @@ import SituationSelect from "@/components/tip/SituationSelect";
 import ServiceRating from "@/components/tip/ServiceRating";
 import ModeToggle from "@/components/tip/ModeToggle";
 import TipDisplay from "@/components/tip/TipDisplay";
+import VenueTier from "@/components/tip/VenueTier";
 import { computeTip } from "@/lib/tipScenarios";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
   const [rating, setRating] = useState(3);
   const [mode, setMode] = useState("rating"); // "rating" | "custom"
   const [customPercent, setCustomPercent] = useState(18);
+  const [venueTier, setVenueTier] = useState("mid");
 
   const billNum = parseFloat(bill) || 0;
 
@@ -25,8 +27,9 @@ export default function Home() {
         mode,
         customPercent,
         people,
+        venueTier,
       }),
-    [scenario, billNum, rating, mode, customPercent, people]
+    [scenario, billNum, rating, mode, customPercent, people, venueTier]
   );
 
   const showResult = billNum > 0 && (mode === "custom" || scenario);
@@ -66,6 +69,10 @@ export default function Home() {
             customPercent={customPercent}
             setCustomPercent={setCustomPercent}
           />
+
+          {mode === "rating" && scenario?.venueAware && (
+            <VenueTier venueTier={venueTier} setVenueTier={setVenueTier} />
+          )}
 
           {mode === "rating" && scenario && (
             <ServiceRating rating={rating} setRating={setRating} />
