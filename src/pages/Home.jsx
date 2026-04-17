@@ -8,7 +8,7 @@ import TipDisplay from "@/components/tip/TipDisplay";
 import VenueTier from "@/components/tip/VenueTier";
 import SettingsPanel from "@/components/tip/SettingsPanel";
 import { computeTip } from "@/lib/tipScenarios";
-import { useSettings, LOCATIONS, BUDGET_MODE_MULT } from "@/lib/SettingsContext";
+import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel } from "@/lib/SettingsContext";
 
 export default function Home() {
   const [bill, setBill] = useState("");
@@ -20,11 +20,12 @@ export default function Home() {
   const [venueTier, setVenueTier] = useState("mid");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const { budgetMode, location } = useSettings();
+  const { budgetMode, stateId, cityId } = useSettings();
 
   const billNum = parseFloat(bill) || 0;
-  const locationAdj = LOCATIONS.find((l) => l.id === location)?.adj ?? 0;
+  const locationAdj = getLocationAdj(stateId, cityId);
   const budgetMult = budgetMode ? BUDGET_MODE_MULT : 1;
+  const locationLabel = getLocationLabel(stateId, cityId);
 
   const result = useMemo(
     () =>
@@ -56,7 +57,7 @@ export default function Home() {
           >
             <Settings className="w-4 h-4" />
             Settings
-            {(budgetMode || location !== "national") && (
+            {(budgetMode || locationLabel) && (
               <span className="ml-1 w-2 h-2 rounded-full bg-accent inline-block" />
             )}
           </button>
@@ -77,16 +78,16 @@ export default function Home() {
           <p className="mt-5 text-muted-foreground max-w-md mx-auto">
             Research-backed tipping guidance for every situation — from sit-down dinners to lawn care.
           </p>
-          {(budgetMode || location !== "national") && (
+          {(budgetMode || locationLabel) && (
             <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
               {budgetMode && (
                 <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent rounded-full px-3 py-1 font-medium">
                   Budget Mode on
                 </span>
               )}
-              {location !== "national" && (
+              {locationLabel && (
                 <span className="inline-flex items-center gap-1 text-xs bg-secondary text-muted-foreground rounded-full px-3 py-1">
-                  📍 {LOCATIONS.find((l) => l.id === location)?.label}
+                  📍 {locationLabel}
                 </span>
               )}
             </div>

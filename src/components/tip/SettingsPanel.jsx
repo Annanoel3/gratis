@@ -1,10 +1,14 @@
 import React from "react";
 import { Moon, Sun, Wallet, MapPin, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSettings, LOCATIONS } from "@/lib/SettingsContext";
+import { useSettings, STATES, getLocationNote } from "@/lib/SettingsContext";
 
 export default function SettingsPanel({ open, onClose }) {
-  const { darkMode, setDarkMode, budgetMode, setBudgetMode, location, setLocation } = useSettings();
+  const { darkMode, setDarkMode, budgetMode, setBudgetMode, stateId, setStateId, cityId, setCityId } = useSettings();
+
+  const selectedState = STATES.find((s) => s.id === stateId);
+  const hasCities = selectedState?.cities?.length > 0;
+  const note = getLocationNote(stateId, cityId);
 
   return (
     <AnimatePresence>
@@ -48,7 +52,7 @@ export default function SettingsPanel({ open, onClose }) {
                   <div>
                     <div className="text-sm font-medium">Budget Mode</div>
                     <div className="text-xs text-muted-foreground leading-relaxed">
-                      Shifts suggestions toward the lower-but-still-polite end of each range — useful when money is tight.
+                      Shifts suggestions toward the lower-but-still-polite end of each range.
                     </div>
                   </div>
                 </div>
@@ -57,34 +61,57 @@ export default function SettingsPanel({ open, onClose }) {
 
               {budgetMode && (
                 <div className="bg-accent/10 text-accent rounded-lg px-3 py-2 text-xs leading-relaxed -mt-2">
-                  Tips will reflect the minimum considered polite in the US — servers will notice, but won't be stiffed.
+                  Tips reflect the minimum considered polite — servers will notice, but won't be stiffed.
                 </div>
               )}
 
               <div className="border-t border-border" />
 
-              {/* Location */}
+              {/* Location — State */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <MapPin className="w-4 h-4 text-accent" />
                   <div>
                     <div className="text-sm font-medium">Location <span className="text-muted-foreground font-normal">(optional)</span></div>
-                    <div className="text-xs text-muted-foreground">Tipping norms vary by city and region.</div>
+                    <div className="text-xs text-muted-foreground">Tipping norms vary by state and city.</div>
                   </div>
                 </div>
+
+                {/* State picker */}
                 <select
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={stateId}
+                  onChange={(e) => setStateId(e.target.value)}
                   className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                 >
-                  {LOCATIONS.map((loc) => (
-                    <option key={loc.id} value={loc.id}>{loc.label}</option>
+                  {STATES.filter(s => !s.cities || s.cities.length === 0 || s.id === "national").map((s) => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
                   ))}
+                  <optgroup label="States with city variation">
+                    {STATES.filter(s => s.cities && s.cities.length > 0 && s.id !== "national").map((s) => (
+                      <option key={s.id} value={s.id}>{s.label}</option>
+                    ))}
+                  </optgroup>
                 </select>
-                {LOCATIONS.find(l => l.id === location)?.note && (
-                  <div className="mt-2 text-xs text-muted-foreground italic">
-                    {LOCATIONS.find(l => l.id === location).note}
+
+                {/* City picker — only shown when state has city-level variation */}
+                {hasCities && (
+                  <div className="mt-3">
+                    <div className="text-xs text-muted-foreground mb-1.5">Which part of {selectedState.label}?</div>
+                    <select
+                      value={cityId}
+                      onChange={(e) => setCityId(e.target.value)}
+                      className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                    >
+                      <option value="">— Statewide average —</option>
+                      {selectedState.cities.map((c) => (
+                        <option key={c.id} value={c.id}>{c.label}</option>
+                      ))}
+                    </select>
                   </div>
+                )}
+
+                {note && (
+                  <div className="mt-2 text-xs text-muted-foreground italic">{note}</div>
                 )}
               </div>
             </div>
