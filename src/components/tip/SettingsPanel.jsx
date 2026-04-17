@@ -30,7 +30,7 @@ export default function SettingsPanel({ open, onClose }) {
               </button>
             </div>
 
-            <div className="p-5 space-y-5">
+            <div className="p-5 space-y-5 max-h-[80vh] overflow-y-auto">
               {/* Dark Mode */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -155,6 +155,24 @@ export default function SettingsPanel({ open, onClose }) {
                     )}
                   </>
                 )}
+              </div>
+
+              <div className="border-t border-border" />
+
+              {/* Privacy Policy */}
+              <div>
+                <div className="text-sm font-medium mb-2">Privacy</div>
+                <div className="text-xs text-muted-foreground leading-relaxed space-y-2">
+                  <p>
+                    <span className="font-medium text-foreground">We don't collect any personal data.</span> TipHelper stores your preferences (dark mode, location, budget mode) only in your browser's local storage — nothing is sent to any server.
+                  </p>
+                  <p>
+                    When you use the international tipping feature, a prompt describing your country is sent to an AI language model to generate a cultural insight. No personally identifiable information is included in that request.
+                  </p>
+                  <p>
+                    We don't use analytics, tracking pixels, or third-party data brokers. What happens in your browser stays in your browser.
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
