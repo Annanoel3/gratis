@@ -54,7 +54,7 @@ export default function Home() {
   }, []);
 
   const billNum = parseFloat(bill) || 0;
-  const locationAdj = notInUS ? getCountryAdj(country) : getLocationAdj(stateId, cityId);
+  const locationAdj = notInUS ? 0 : getLocationAdj(stateId, cityId);
   const budgetMult = budgetMode ? BUDGET_MODE_MULT : 1;
   const locationLabel = getLocationLabel(stateId, cityId);
 
