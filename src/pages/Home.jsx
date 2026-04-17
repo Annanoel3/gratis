@@ -42,7 +42,10 @@ export default function Home() {
       hasScrolledRef.current = true;
       window.removeEventListener("scroll", handleScroll);
       setTimeout(() => {
-        calcRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (calcRef.current) {
+        const top = calcRef.current.getBoundingClientRect().top + window.scrollY - 16;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
       }, 150);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -74,7 +77,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-5 py-12 md:py-20">
+      <div className="max-w-2xl mx-auto px-5 py-6 md:py-10">
 
         {/* Settings button */}
         <div className="flex justify-end mb-2">
@@ -93,7 +96,7 @@ export default function Home() {
         <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
         {/* Header */}
-        <header className="text-center mb-12">
+        <header className="text-center mb-6">
           <div className="inline-block text-[10px] uppercase tracking-[0.3em] text-accent font-semibold mb-4">
             TipHelper
           </div>
@@ -189,7 +192,7 @@ export default function Home() {
             </div>
 
             {/* Result */}
-            <div className="mt-6">
+            <div className="mt-3">
               {showResult ? (
                 <TipDisplay result={result} scenario={scenario} people={people} />
               ) : (
@@ -201,7 +204,7 @@ export default function Home() {
           </>
         )}
 
-        <footer className="mt-10 text-center text-xs text-muted-foreground space-y-1">
+        <footer className="mt-4 text-center text-xs text-muted-foreground space-y-1">
           {notInUS ? (
             <>
               <p>Tipping customs sourced from cultural research.</p>
@@ -212,7 +215,7 @@ export default function Home() {
           )}
         </footer>
 
-        <AdSlot className="mt-6" />
+        <AdSlot className="mt-3" />
       </div>
     </div>
   );
