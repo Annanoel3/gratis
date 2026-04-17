@@ -1,15 +1,26 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const fmt = (n) =>
-  new Intl.NumberFormat("en-US", {
+function fmt(n, currency) {
+  const safeN = isFinite(n) ? n : 0;
+  if (currency) {
+    // Format in local currency
+    const converted = safeN * currency.rate;
+    const isLargeRate = currency.rate >= 100;
+    return `${currency.symbol}${converted.toLocaleString("en-US", {
+      minimumFractionDigits: isLargeRate ? 0 : 2,
+      maximumFractionDigits: isLargeRate ? 0 : 2,
+    })}`;
+  }
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(isFinite(n) ? n : 0);
+  }).format(safeN);
+}
 
-export default function TipDisplay({ result, scenario, people }) {
+export default function TipDisplay({ result, scenario, people, localCurrency }) {
   const { tipAmount, totalAmount, perPerson, effectivePercent, isFlat } = result;
 
   return (
@@ -27,7 +38,7 @@ export default function TipDisplay({ result, scenario, people }) {
         </div>
         <div className="mt-3 flex items-baseline gap-3 flex-wrap">
           <div className="font-serif text-6xl md:text-7xl tabular-nums leading-none">
-            {fmt(tipAmount)}
+            {fmt(tipAmount, localCurrency)}
           </div>
           <div className="text-background/70 font-serif text-xl tabular-nums">
             {effectivePercent > 0 ? `${effectivePercent.toFixed(1)}%` : ""}
@@ -41,7 +52,7 @@ export default function TipDisplay({ result, scenario, people }) {
               Total
             </div>
             <div className="mt-1 font-serif text-3xl tabular-nums">
-              {fmt(totalAmount)}
+              {fmt(totalAmount, localCurrency)}
             </div>
           </div>
           {people > 1 && (
@@ -50,7 +61,7 @@ export default function TipDisplay({ result, scenario, people }) {
                 Per Person ({people})
               </div>
               <div className="mt-1 font-serif text-3xl tabular-nums">
-                {fmt(perPerson)}
+                {fmt(perPerson, localCurrency)}
               </div>
             </div>
           )}

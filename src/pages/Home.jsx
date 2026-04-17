@@ -8,6 +8,8 @@ import TipDisplay from "@/components/tip/TipDisplay";
 import VenueTier from "@/components/tip/VenueTier";
 import SettingsPanel from "@/components/tip/SettingsPanel";
 import InternationalInsight from "@/components/tip/InternationalInsight";
+import CurrencyToggle, { getCurrencyForCountry } from "@/components/tip/CurrencyToggle";
+import AdSlot from "@/components/AdSlot";
 import { computeTip } from "@/lib/tipScenarios";
 import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
 
@@ -21,12 +23,14 @@ export default function Home() {
   const [venueTier, setVenueTier] = useState("mid");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [intlCalculatorOpen, setIntlCalculatorOpen] = useState(false);
+  const [useLocalCurrency, setUseLocalCurrency] = useState(false);
 
   const { budgetMode, stateId, cityId, notInUS, country } = useSettings();
 
   // Reset calculator when country changes
   useEffect(() => {
     setIntlCalculatorOpen(false);
+    setUseLocalCurrency(false);
   }, [country]);
 
   const billNum = parseFloat(bill) || 0;
@@ -116,6 +120,11 @@ export default function Home() {
                 />
                 {intlCalculatorOpen && (
                   <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
+                    <CurrencyToggle
+                      country={country}
+                      useLocalCurrency={useLocalCurrency}
+                      setUseLocalCurrency={setUseLocalCurrency}
+                    />
                     <BillInput bill={bill} setBill={setBill} people={people} setPeople={setPeople} />
                     <SituationSelect selected={scenario} onSelect={setScenario} />
                     <ModeToggle mode={mode} setMode={setMode} customPercent={customPercent} setCustomPercent={setCustomPercent} />
@@ -127,7 +136,12 @@ export default function Home() {
                     )}
                     <div className="mt-2">
                       {billNum > 0 && (mode === "custom" || scenario) ? (
-                        <TipDisplay result={result} scenario={scenario} people={people} />
+                        <TipDisplay
+                          result={result}
+                          scenario={scenario}
+                          people={people}
+                          localCurrency={useLocalCurrency ? getCurrencyForCountry(country) : null}
+                        />
                       ) : (
                         <div className="text-center text-sm text-muted-foreground py-4">
                           Enter a bill amount{mode === "rating" && " and pick a situation"} to see your tip.
@@ -171,7 +185,9 @@ export default function Home() {
           </>
         )}
 
-        <footer className="mt-10 text-center text-xs text-muted-foreground">
+        <AdSlot className="mt-10" />
+
+        <footer className="mt-6 text-center text-xs text-muted-foreground">
           {notInUS ? "Tipping customs sourced from cultural research." : "Guidelines based on standard US tipping customs. Adjust to taste."}
         </footer>
       </div>
