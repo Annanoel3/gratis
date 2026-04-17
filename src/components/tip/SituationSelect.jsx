@@ -3,7 +3,7 @@ import { ChevronDown, Search, Check } from "lucide-react";
 import { TIP_SCENARIOS, CATEGORIES } from "@/lib/tipScenarios";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function SituationSelect({ selected, onSelect }) {
+export default function SituationSelect({ selected, onSelect, locationAdj = 0 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -89,7 +89,7 @@ export default function SituationSelect({ selected, onSelect }) {
                             <div className="text-xs text-muted-foreground">
                               {s.type === "flat"
                                 ? `$${s.min}–$${s.max} typical`
-                                : `${s.min}–${s.max}% typical`}
+                                : `${Math.max(0, s.min + locationAdj)}–${Math.max(0, s.max + locationAdj)}% typical`}
                             </div>
                           </div>
                           {selected?.id === s.id && (
