@@ -172,7 +172,7 @@ export const CATEGORIES = [
   "Other",
 ];
 
-export function computeTip({ scenario, bill, rating, mode, customPercent, people = 1, venueTier = "mid" }) {
+export function computeTip({ scenario, bill, rating, mode, customPercent, people = 1, venueTier = "mid", budgetMult = 1, locationAdj = 0 }) {
   if (!scenario || !bill || bill <= 0) {
     return { tipAmount: 0, totalAmount: 0, perPerson: 0, effectivePercent: 0, isFlat: false };
   }
@@ -193,11 +193,11 @@ export function computeTip({ scenario, bill, rating, mode, customPercent, people
     const combinedMult = ratingMult * tierMult;
 
     if (scenario.type === "flat") {
-      tipAmount = scenario.base * combinedMult;
+      tipAmount = scenario.base * combinedMult * budgetMult;
       isFlat = true;
       effectivePercent = (tipAmount / bill) * 100;
     } else {
-      const pct = scenario.base * combinedMult;
+      const pct = (scenario.base * combinedMult * budgetMult) + locationAdj;
       tipAmount = (bill * pct) / 100;
       effectivePercent = pct;
     }
