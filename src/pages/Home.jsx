@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Settings } from "lucide-react";
 import BillInput from "@/components/tip/BillInput";
 import SituationSelect from "@/components/tip/SituationSelect";
@@ -26,12 +26,28 @@ export default function Home() {
   const [useLocalCurrency, setUseLocalCurrency] = useState(false);
 
   const { budgetMode, stateId, cityId, notInUS, country } = useSettings();
+  const calcRef = useRef(null);
+  const hasScrolledRef = useRef(false);
 
   // Reset calculator when country changes
   useEffect(() => {
     setIntlCalculatorOpen(false);
     setUseLocalCurrency(false);
   }, [country]);
+
+  // Auto-scroll to calculator on first user scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (hasScrolledRef.current) return;
+      hasScrolledRef.current = true;
+      window.removeEventListener("scroll", handleScroll);
+      setTimeout(() => {
+        calcRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const billNum = parseFloat(bill) || 0;
   const locationAdj = notInUS ? getCountryAdj(country) : getLocationAdj(stateId, cityId);
@@ -111,7 +127,7 @@ export default function Home() {
 
         {notInUS ? (
           /* International mode */
-          <div className="mt-2">
+          <div className="mt-2" ref={calcRef}>
             {country.trim() ? (
               <>
                 <InternationalInsight
@@ -160,7 +176,7 @@ export default function Home() {
         ) : (
           <>
             {/* Card */}
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
+            <div ref={calcRef} className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
               <BillInput bill={bill} setBill={setBill} people={people} setPeople={setPeople} />
               <SituationSelect selected={scenario} onSelect={setScenario} locationAdj={locationAdj} />
               <ModeToggle mode={mode} setMode={setMode} customPercent={customPercent} setCustomPercent={setCustomPercent} />

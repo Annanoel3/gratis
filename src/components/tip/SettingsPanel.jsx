@@ -101,11 +101,19 @@ export default function SettingsPanel({ open, onClose }) {
                       placeholder="e.g. Japan, Germany, Australia…"
                       className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                     />
-                    {country.trim() && (
-                      <div className="mt-2 text-xs text-muted-foreground italic">
-                        We'll share tipping customs and philosophy for {country.trim()}.
-                      </div>
-                    )}
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      {country.trim() ? (
+                        <div className="text-xs text-muted-foreground italic">
+                          We'll share tipping customs and philosophy for {country.trim()}.
+                        </div>
+                      ) : <div />}
+                      <button
+                        onClick={onClose}
+                        className="shrink-0 text-xs px-3 py-1 rounded-full bg-foreground text-background hover:opacity-80 transition"
+                      >
+                        Done
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <>
