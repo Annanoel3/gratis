@@ -35,17 +35,18 @@ export default function Home() {
     setUseLocalCurrency(false);
   }, [country]);
 
-  // Auto-scroll to calculator on first user scroll
+  // Auto-scroll to calculator on first user scroll (resets on every page visit)
   useEffect(() => {
+    hasScrolledRef.current = false;
     const handleScroll = () => {
       if (hasScrolledRef.current) return;
       hasScrolledRef.current = true;
       window.removeEventListener("scroll", handleScroll);
       setTimeout(() => {
         if (calcRef.current) {
-        const top = calcRef.current.getBoundingClientRect().top + window.scrollY - 16;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
+          const top = calcRef.current.getBoundingClientRect().top + window.scrollY - 16;
+          window.scrollTo({ top, behavior: "smooth" });
+        }
       }, 150);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
