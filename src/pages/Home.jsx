@@ -196,7 +196,7 @@ export default function Home() {
               {showResult ? (
                 <TipDisplay result={result} scenario={scenario} people={people} />
               ) : (
-                <div className="text-center text-sm text-muted-foreground py-6">
+                <div className="text-center text-sm text-muted-foreground py-2">
                   Enter a bill amount{mode === "rating" && " and pick a situation"} to see your tip.
                 </div>
               )}
@@ -204,7 +204,7 @@ export default function Home() {
           </>
         )}
 
-        <footer className="mt-4 text-center text-xs text-muted-foreground space-y-1">
+        <footer className="mt-2 text-center text-xs text-muted-foreground space-y-0.5">
           {notInUS ? (
             <>
               <p>Tipping customs sourced from cultural research.</p>
