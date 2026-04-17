@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Settings } from "lucide-react";
 import BillInput from "@/components/tip/BillInput";
 import SituationSelect from "@/components/tip/SituationSelect";
@@ -20,8 +20,14 @@ export default function Home() {
   const [customPercent, setCustomPercent] = useState(18);
   const [venueTier, setVenueTier] = useState("mid");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [intlCalculatorOpen, setIntlCalculatorOpen] = useState(false);
 
   const { budgetMode, stateId, cityId, notInUS, country } = useSettings();
+
+  // Reset calculator when country changes
+  useEffect(() => {
+    setIntlCalculatorOpen(false);
+  }, [country]);
 
   const billNum = parseFloat(bill) || 0;
   const locationAdj = getLocationAdj(stateId, cityId);
@@ -103,7 +109,34 @@ export default function Home() {
           /* International mode */
           <div className="mt-2">
             {country.trim() ? (
-              <InternationalInsight country={country} />
+              <>
+                <InternationalInsight
+                  country={country}
+                  onReadyToCalculate={() => setIntlCalculatorOpen(true)}
+                />
+                {intlCalculatorOpen && (
+                  <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
+                    <BillInput bill={bill} setBill={setBill} people={people} setPeople={setPeople} />
+                    <SituationSelect selected={scenario} onSelect={setScenario} />
+                    <ModeToggle mode={mode} setMode={setMode} customPercent={customPercent} setCustomPercent={setCustomPercent} />
+                    {mode === "rating" && scenario?.venueAware && (
+                      <VenueTier venueTier={venueTier} setVenueTier={setVenueTier} />
+                    )}
+                    {mode === "rating" && scenario && (
+                      <ServiceRating rating={rating} setRating={setRating} />
+                    )}
+                    <div className="mt-2">
+                      {billNum > 0 && (mode === "custom" || scenario) ? (
+                        <TipDisplay result={result} scenario={scenario} people={people} />
+                      ) : (
+                        <div className="text-center text-sm text-muted-foreground py-4">
+                          Enter a bill amount{mode === "rating" && " and pick a situation"} to see your tip.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-center text-sm text-muted-foreground py-8 bg-card border border-border rounded-2xl">
                 Enter your country in Settings to get local tipping culture and customs.
@@ -130,7 +163,7 @@ export default function Home() {
               {showResult ? (
                 <TipDisplay result={result} scenario={scenario} people={people} />
               ) : (
-                <div className="text-center text-sm text-muted-foreground py-8">
+                <div className="text-center text-sm text-muted-foreground py-6">
                   Enter a bill amount{mode === "rating" && " and pick a situation"} to see your tip.
                 </div>
               )}
