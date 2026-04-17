@@ -9,7 +9,7 @@ import VenueTier from "@/components/tip/VenueTier";
 import SettingsPanel from "@/components/tip/SettingsPanel";
 import InternationalInsight from "@/components/tip/InternationalInsight";
 import { computeTip } from "@/lib/tipScenarios";
-import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel } from "@/lib/SettingsContext";
+import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
 
 export default function Home() {
   const [bill, setBill] = useState("");
@@ -30,7 +30,7 @@ export default function Home() {
   }, [country]);
 
   const billNum = parseFloat(bill) || 0;
-  const locationAdj = getLocationAdj(stateId, cityId);
+  const locationAdj = notInUS ? getCountryAdj(country) : getLocationAdj(stateId, cityId);
   const budgetMult = budgetMode ? BUDGET_MODE_MULT : 1;
   const locationLabel = getLocationLabel(stateId, cityId);
 
@@ -89,14 +89,14 @@ export default function Home() {
               ? "Tipping customs vary wildly around the world — here's what you need to know."
               : "Research-backed tipping guidance for every situation — from sit-down dinners to lawn care."}
           </p>
-          {(budgetMode || locationLabel) && (
+          {(budgetMode || (!notInUS && locationLabel)) && (
             <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
               {budgetMode && (
                 <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent rounded-full px-3 py-1 font-medium">
                   Budget Mode on
                 </span>
               )}
-              {locationLabel && (
+              {!notInUS && locationLabel && (
                 <span className="inline-flex items-center gap-1 text-xs bg-secondary text-muted-foreground rounded-full px-3 py-1">
                   📍 {locationLabel}
                 </span>

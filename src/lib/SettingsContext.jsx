@@ -157,6 +157,62 @@ export function getLocationNote(stateId, cityId) {
   return state.note || null;
 }
 
+// Country-level tip adjustments (additive % points on the base).
+// Positive = tip more, negative = tip less, relative to the US 18% base.
+// "none" countries won't show the calculator at all; these cover optional/expected cases.
+const COUNTRY_ADJUSTMENTS = {
+  // Europe — generally lower than US norms
+  "united kingdom": -3,  "uk": -3,  "england": -3,  "britain": -3,
+  "france": -4,
+  "germany": -4,
+  "italy": -2,
+  "spain": -4,
+  "portugal": -3,
+  "netherlands": -4,  "holland": -4,
+  "belgium": -4,
+  "switzerland": -2,
+  "austria": -3,
+  "sweden": -5,
+  "norway": -5,
+  "denmark": -5,
+  "finland": -5,
+  "ireland": -2,
+  "greece": -3,
+  "poland": -3,
+  "czech republic": -3,  "czechia": -3,
+  // Americas
+  "canada": -1,
+  "mexico": -2,
+  "brazil": -2,
+  "argentina": -3,
+  "colombia": -2,
+  // Asia-Pacific — optional/low when tipping is done at all
+  "australia": -4,
+  "new zealand": -4,
+  "singapore": -3,
+  "hong kong": -2,
+  "india": -2,
+  "thailand": -2,
+  "indonesia": -3,
+  "malaysia": -3,
+  "philippines": -2,
+  "vietnam": -3,
+  // Middle East
+  "uae": -1,  "united arab emirates": -1,  "dubai": -1,
+  "israel": -2,
+  "turkey": -2,
+  // Africa
+  "south africa": -2,
+  "egypt": -2,
+  "kenya": -2,
+};
+
+export function getCountryAdj(country) {
+  if (!country) return 0;
+  const key = country.trim().toLowerCase();
+  return COUNTRY_ADJUSTMENTS[key] ?? -2; // default: slight reduction for unknown international destinations
+}
+
 // Budget mode multiplier — brings percentages down to the lower end of acceptable norms.
 export const BUDGET_MODE_MULT = 0.78;
 
