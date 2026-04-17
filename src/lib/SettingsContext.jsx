@@ -165,6 +165,8 @@ export function SettingsProvider({ children }) {
   const [budgetMode, setBudgetMode] = useState(() => localStorage.getItem("tiphelper_budget") === "true");
   const [stateId, setStateId] = useState(() => localStorage.getItem("tiphelper_state") || "national");
   const [cityId, setCityId] = useState(() => localStorage.getItem("tiphelper_city") || "");
+  const [notInUS, setNotInUS] = useState(() => localStorage.getItem("tiphelper_notinus") === "true");
+  const [country, setCountry] = useState(() => localStorage.getItem("tiphelper_country") || "");
 
   useEffect(() => {
     localStorage.setItem("tiphelper_dark", darkMode);
@@ -174,6 +176,8 @@ export function SettingsProvider({ children }) {
   useEffect(() => { localStorage.setItem("tiphelper_budget", budgetMode); }, [budgetMode]);
   useEffect(() => { localStorage.setItem("tiphelper_state", stateId); }, [stateId]);
   useEffect(() => { localStorage.setItem("tiphelper_city", cityId); }, [cityId]);
+  useEffect(() => { localStorage.setItem("tiphelper_notinus", notInUS); }, [notInUS]);
+  useEffect(() => { localStorage.setItem("tiphelper_country", country); }, [country]);
 
   const handleSetStateId = (id) => {
     setStateId(id);
@@ -186,6 +190,8 @@ export function SettingsProvider({ children }) {
       budgetMode, setBudgetMode,
       stateId, setStateId: handleSetStateId,
       cityId, setCityId,
+      notInUS, setNotInUS,
+      country, setCountry,
     }}>
       {children}
     </SettingsContext.Provider>

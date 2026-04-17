@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSettings, STATES, getLocationNote } from "@/lib/SettingsContext";
 
 export default function SettingsPanel({ open, onClose }) {
-  const { darkMode, setDarkMode, budgetMode, setBudgetMode, stateId, setStateId, cityId, setCityId } = useSettings();
+  const { darkMode, setDarkMode, budgetMode, setBudgetMode, stateId, setStateId, cityId, setCityId, notInUS, setNotInUS, country, setCountry } = useSettings();
 
   const selectedState = STATES.find((s) => s.id === stateId);
-  const hasCities = selectedState?.cities?.length > 0;
-  const note = getLocationNote(stateId, cityId);
+  const hasCities = !notInUS && selectedState?.cities?.length > 0;
+  const note = !notInUS ? getLocationNote(stateId, cityId) : null;
 
   return (
     <AnimatePresence>
@@ -77,41 +77,75 @@ export default function SettingsPanel({ open, onClose }) {
                   </div>
                 </div>
 
-                {/* State picker */}
-                <select
-                  value={stateId}
-                  onChange={(e) => setStateId(e.target.value)}
-                  className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-                >
-                  {STATES.filter(s => !s.cities || s.cities.length === 0 || s.id === "national").map((s) => (
-                    <option key={s.id} value={s.id}>{s.label}</option>
-                  ))}
-                  <optgroup label="States with city variation">
-                    {STATES.filter(s => s.cities && s.cities.length > 0 && s.id !== "national").map((s) => (
-                      <option key={s.id} value={s.id}>{s.label}</option>
-                    ))}
-                  </optgroup>
-                </select>
+                {/* Not in the US checkbox */}
+                <label className="flex items-center gap-2 mb-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={notInUS}
+                    onChange={(e) => {
+                      setNotInUS(e.target.checked);
+                      if (!e.target.checked) setCountry("");
+                    }}
+                    className="w-4 h-4 rounded accent-foreground cursor-pointer"
+                  />
+                  <span className="text-sm">I'm not in the US</span>
+                </label>
 
-                {/* City picker — only shown when state has city-level variation */}
-                {hasCities && (
-                  <div className="mt-3">
-                    <div className="text-xs text-muted-foreground mb-1.5">Which part of {selectedState.label}?</div>
+                {notInUS ? (
+                  /* Country input */
+                  <div>
+                    <input
+                      type="text"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      placeholder="e.g. Japan, Germany, Australia…"
+                      className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                    />
+                    {country.trim() && (
+                      <div className="mt-2 text-xs text-muted-foreground italic">
+                        We'll share tipping customs and philosophy for {country.trim()}.
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    {/* State picker */}
                     <select
-                      value={cityId}
-                      onChange={(e) => setCityId(e.target.value)}
+                      value={stateId}
+                      onChange={(e) => setStateId(e.target.value)}
                       className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                     >
-                      <option value="">— Statewide average —</option>
-                      {selectedState.cities.map((c) => (
-                        <option key={c.id} value={c.id}>{c.label}</option>
+                      {STATES.filter(s => !s.cities || s.cities.length === 0 || s.id === "national").map((s) => (
+                        <option key={s.id} value={s.id}>{s.label}</option>
                       ))}
+                      <optgroup label="States with city variation">
+                        {STATES.filter(s => s.cities && s.cities.length > 0 && s.id !== "national").map((s) => (
+                          <option key={s.id} value={s.id}>{s.label}</option>
+                        ))}
+                      </optgroup>
                     </select>
-                  </div>
-                )}
 
-                {note && (
-                  <div className="mt-2 text-xs text-muted-foreground italic">{note}</div>
+                    {/* City picker — only shown when state has city-level variation */}
+                    {hasCities && (
+                      <div className="mt-3">
+                        <div className="text-xs text-muted-foreground mb-1.5">Which part of {selectedState.label}?</div>
+                        <select
+                          value={cityId}
+                          onChange={(e) => setCityId(e.target.value)}
+                          className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                        >
+                          <option value="">— Statewide average —</option>
+                          {selectedState.cities.map((c) => (
+                            <option key={c.id} value={c.id}>{c.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    {note && (
+                      <div className="mt-2 text-xs text-muted-foreground italic">{note}</div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
