@@ -7,6 +7,8 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from '@/pages/Home';
 import { SettingsProvider } from '@/lib/SettingsContext';
+import { initAdMob, maybeShowAdOnOpen } from '@/lib/admob';
+import { useEffect } from 'react';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -42,6 +44,9 @@ const AuthenticatedApp = () => {
 
 
 function App() {
+  useEffect(() => {
+    initAdMob().then(() => maybeShowAdOnOpen());
+  }, []);
 
   return (
     <SettingsProvider>
