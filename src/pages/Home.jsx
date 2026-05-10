@@ -10,6 +10,7 @@ import SettingsPanel from "@/components/tip/SettingsPanel";
 import InternationalInsight from "@/components/tip/InternationalInsight";
 import CurrencyToggle, { getCurrencyForCountry } from "@/components/tip/CurrencyToggle";
 import AdSlot from "@/components/AdSlot";
+import PullToRefresh from "@/components/PullToRefresh";
 import { computeTip } from "@/lib/tipScenarios";
 import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
 
@@ -76,9 +77,21 @@ export default function Home() {
 
   const showResult = !notInUS && billNum > 0 && (mode === "custom" || scenario);
 
+  const handleRefresh = () => {
+    setScenario(null);
+    setBill("");
+    setPeople(1);
+    setRating(3);
+    setMode("rating");
+    setCustomPercent(18);
+    setVenueTier("mid");
+    return new Promise((r) => setTimeout(r, 600));
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-5 py-6 md:py-10">
+      <div className="max-w-2xl mx-auto px-5 py-6 md:py-10" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}>
 
         {/* Settings button */}
         <div className="flex justify-end mb-2">
@@ -219,5 +232,6 @@ export default function Home() {
         <AdSlot className="mt-3" />
       </div>
     </div>
+    </PullToRefresh>
   );
 }

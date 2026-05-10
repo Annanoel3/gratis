@@ -82,6 +82,13 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, [role="button"], label {
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .font-serif {

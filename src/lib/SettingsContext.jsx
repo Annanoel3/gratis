@@ -217,17 +217,33 @@ export function getCountryAdj(country) {
 export const BUDGET_MODE_MULT = 0.78;
 
 export function SettingsProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("tiphelper_dark") === "true");
+  // theme: "light" | "dark" | "system"
+  const [theme, setTheme] = useState(() => localStorage.getItem("tiphelper_theme") || "system");
   const [budgetMode, setBudgetMode] = useState(() => localStorage.getItem("tiphelper_budget") === "true");
   const [stateId, setStateId] = useState(() => localStorage.getItem("tiphelper_state") || "national");
   const [cityId, setCityId] = useState(() => localStorage.getItem("tiphelper_city") || "");
   const [notInUS, setNotInUS] = useState(() => localStorage.getItem("tiphelper_notinus") === "true");
   const [country, setCountry] = useState(() => localStorage.getItem("tiphelper_country") || "");
 
+  // Resolve effective dark mode from theme setting
+  const systemDark = typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const darkMode = theme === "dark" || (theme === "system" && systemDark);
+  const setDarkMode = (val) => setTheme(val ? "dark" : "light");
+
   useEffect(() => {
-    localStorage.setItem("tiphelper_dark", darkMode);
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
+    localStorage.setItem("tiphelper_theme", theme);
+    let effective = theme === "dark";
+    if (theme === "system") {
+      effective = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      // Also listen for system changes
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      const handler = (e) => document.documentElement.classList.toggle("dark", e.matches);
+      mq.addEventListener("change", handler);
+      document.documentElement.classList.toggle("dark", effective);
+      return () => mq.removeEventListener("change", handler);
+    }
+    document.documentElement.classList.toggle("dark", effective);
+  }, [theme]);
 
   useEffect(() => { localStorage.setItem("tiphelper_budget", budgetMode); }, [budgetMode]);
   useEffect(() => { localStorage.setItem("tiphelper_state", stateId); }, [stateId]);
@@ -242,6 +258,7 @@ export function SettingsProvider({ children }) {
 
   return (
     <SettingsContext.Provider value={{
+      theme, setTheme,
       darkMode, setDarkMode,
       budgetMode, setBudgetMode,
       stateId, setStateId: handleSetStateId,

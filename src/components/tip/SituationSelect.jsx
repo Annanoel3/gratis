@@ -1,11 +1,36 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { ChevronDown, Search, Check } from "lucide-react";
 import { TIP_SCENARIOS, CATEGORIES } from "@/lib/tipScenarios";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 
 export default function SituationSelect({ selected, onSelect, locationAdj = 0 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Sync open with URL param
+  const openInUrl = searchParams.get("picker") === "situation";
+
+  useEffect(() => {
+    if (open && !openInUrl) {
+      setSearchParams((p) => { const n = new URLSearchParams(p); n.set("picker", "situation"); return n; }, { replace: true });
+    } else if (!open && openInUrl) {
+      setSearchParams((p) => { const n = new URLSearchParams(p); n.delete("picker"); return n; }, { replace: true });
+    }
+  }, [open]);
+
+  // Close when URL param removed (Android back)
+  useEffect(() => {
+    if (!openInUrl && open) {
+      setOpen(false);
+    }
+  }, [openInUrl]);
+
+  const handleClose = () => {
+    setOpen(false);
+    setQuery("");
+  };
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -47,7 +72,7 @@ export default function SituationSelect({ selected, onSelect, locationAdj = 0 })
       <AnimatePresence>
         {open && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+            <div className="fixed inset-0 z-40" onClick={handleClose} />
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -79,10 +104,9 @@ export default function SituationSelect({ selected, onSelect, locationAdj = 0 })
                           key={s.id}
                           onClick={() => {
                             onSelect(s);
-                            setOpen(false);
-                            setQuery("");
+                            handleClose();
                           }}
-                          className="w-full text-left px-4 py-2.5 hover:bg-secondary flex items-center justify-between group"
+                          className="w-full text-left px-4 py-3 hover:bg-secondary active:bg-secondary flex items-center justify-between group"
                         >
                           <div>
                             <div className="text-sm font-medium">{s.label}</div>

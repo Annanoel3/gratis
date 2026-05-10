@@ -1,15 +1,26 @@
-import { Capacitor, registerPlugin } from '@capacitor/core';
-
 const AD_UNIT_ID = 'ca-app-pub-7979856440890193/1081172636';
 const SHOW_EVERY_N_OPENS = 3;
 const AD_DELAY_MS = 10000;
 
 let AdMob = null;
+let isNative = false;
+
+async function loadCapacitor() {
+  try {
+    const { Capacitor, registerPlugin } = await import('@capacitor/core');
+    isNative = Capacitor.isNativePlatform();
+    if (isNative) {
+      AdMob = registerPlugin('AdMob');
+    }
+  } catch {
+    // Not a native environment, ignore
+  }
+}
 
 export async function initAdMob() {
-  if (!Capacitor.isNativePlatform()) return;
+  await loadCapacitor();
+  if (!isNative || !AdMob) return;
   try {
-    AdMob = registerPlugin('AdMob');
     await AdMob.initialize({ initializeForTesting: false });
     console.log('[AdMob] initialized');
   } catch (e) {
