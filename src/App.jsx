@@ -47,7 +47,15 @@ const AuthenticatedApp = () => {
 
 function App() {
   useEffect(() => {
-    initAdMob().then(() => maybeShowAdOnOpen());
+    // Track app opens and suppress ads on first launch
+    const openCount = parseInt(localStorage.getItem('appOpenCount') || '0', 10);
+    const newCount = openCount + 1;
+    localStorage.setItem('appOpenCount', newCount.toString());
+
+    // Only initialize ads if this is not the first app launch
+    if (newCount >= 2) {
+      initAdMob().then(() => maybeShowAdOnOpen());
+    }
   }, []);
 
   return (
