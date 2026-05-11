@@ -353,6 +353,40 @@ function PanelContent({
 
       {/* Clear Data */}
       <ClearDataSection onClose={onClose} />
+
+      <div className="border-t border-border" />
+
+      {/* Copyright & Intellectual Property */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-lg">©</span>
+          <div className="text-sm font-medium">Copyright & Intellectual Property</div>
+        </div>
+        <div className="text-xs text-muted-foreground leading-relaxed space-y-3">
+          <p>
+            <span className="font-medium text-foreground">© 2026 TipHelper. All rights reserved.</span>
+          </p>
+          <div>
+            <p className="font-medium text-foreground mb-1">Your Content</p>
+            <p>
+              You retain full ownership of any data you input into TipHelper. By using the app, you grant TipHelper a limited, non-exclusive license to process your inputs solely for the purpose of providing tipping calculations and guidance to you.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-foreground mb-1">Restrictions</p>
+            <p>
+              You may not copy, reproduce, distribute, modify, or create derivative works from any part of the TipHelper application without prior written consent. Unauthorized use may violate copyright and applicable laws.
+            </p>
+          </div>
+          <p>
+            For licensing inquiries, contact{" "}
+            <a href="mailto:mediocreatbestdev@outlook.com" className="text-accent hover:underline">
+              mediocreatbestdev@outlook.com
+            </a>
+            .
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
