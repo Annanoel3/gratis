@@ -9,7 +9,6 @@ import VenueTier from "@/components/tip/VenueTier";
 import SettingsPanel from "@/components/tip/SettingsPanel";
 import InternationalInsight from "@/components/tip/InternationalInsight";
 import CurrencyToggle, { getCurrencyForCountry } from "@/components/tip/CurrencyToggle";
-import AdSlot from "@/components/AdSlot";
 import PullToRefresh from "@/components/PullToRefresh";
 import { computeTip } from "@/lib/tipScenarios";
 import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
@@ -229,7 +228,7 @@ export default function Home() {
           )}
         </footer>
 
-        <AdSlot className="mt-3" />
+
       </div>
     </div>
     </PullToRefresh>
