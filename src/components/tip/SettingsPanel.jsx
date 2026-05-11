@@ -338,7 +338,7 @@ function PanelContent({
             When you use the international tipping feature, a prompt describing your country is sent to an AI language model to generate a cultural insight. No personally identifiable information is included in that request.
           </p>
           <p>
-            We don't use analytics, tracking pixels, or third-party data brokers. What happens in your browser stays in your browser.
+            We don't use analytics, tracking pixels, or third-party data brokers. What happens in the app stays in the app.
           </p>
           <p className="pt-1">
             If you have questions about this policy, contact us at{" "}
