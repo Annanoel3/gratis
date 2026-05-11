@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Moon, Sun, Wallet, MapPin, X, Monitor, Check, Trash2 } from "lucide-react";
+import { Moon, Sun, Wallet, MapPin, X, Monitor, Check, Trash2, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSettings, STATES, getLocationNote } from "@/lib/SettingsContext";
 import { useSearchParams } from "react-router-dom";
@@ -327,60 +328,20 @@ function PanelContent({
 
       <div className="border-t border-border" />
 
-      {/* Privacy */}
-      <div>
-        <div className="text-sm font-medium mb-2">Privacy</div>
-        <div className="text-xs text-muted-foreground leading-relaxed space-y-2">
-          <p>
-            <span className="font-medium text-foreground">We don't collect any personal data.</span> TipHelper stores your preferences (dark mode, location, budget mode) only in your browser's local storage — nothing is sent to any server.
-          </p>
-          <p>
-            When you use the international tipping feature, a prompt describing your country is sent to an AI language model to generate a cultural insight. No personally identifiable information is included in that request.
-          </p>
-          <p>
-            We don't use analytics, tracking pixels, or third-party data brokers. What happens in the app stays in the app.
-          </p>
-          <p className="pt-1">
-            If you have questions about this policy, contact us at{" "}
-            <a href="mailto:mediocreatbestdev@outlook.com" className="text-accent hover:underline">
-              mediocreatbestdev@outlook.com
-            </a>
-          </p>
-        </div>
-      </div>
-
-      <div className="border-t border-border" />
-
       {/* Clear Data */}
       <ClearDataSection onClose={onClose} />
 
       <div className="border-t border-border" />
 
-      {/* Copyright & Intellectual Property */}
-      <div>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg">©</span>
-          <div className="text-sm font-medium">Copyright & Intellectual Property</div>
-        </div>
-        <div className="text-xs text-muted-foreground leading-relaxed space-y-3">
-          <p>
-            <span className="font-medium text-foreground">© 2026 TipHelper. All rights reserved.</span>
-          </p>
-          <div>
-            <p className="font-medium text-foreground mb-1">Restrictions</p>
-            <p>
-              You may not copy, reproduce, distribute, modify, or create derivative works from any part of the TipHelper application without prior written consent. Unauthorized use may violate copyright and applicable laws.
-            </p>
-          </div>
-          <p>
-            For licensing inquiries, contact{" "}
-            <a href="mailto:mediocreatbestdev@outlook.com" className="text-accent hover:underline">
-              mediocreatbestdev@outlook.com
-            </a>
-            .
-          </p>
-        </div>
-      </div>
+      {/* Privacy & Legal link */}
+      <Link
+        to="/legal"
+        onClick={onClose}
+        className="flex items-center justify-between text-sm text-muted-foreground hover:text-foreground transition py-1"
+      >
+        <span>Privacy Policy, Terms &amp; Legal</span>
+        <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+      </Link>
     </div>
   );
 }
