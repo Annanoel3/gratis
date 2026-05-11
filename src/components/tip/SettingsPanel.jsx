@@ -340,6 +340,12 @@ function PanelContent({
           <p>
             We don't use analytics, tracking pixels, or third-party data brokers. What happens in your browser stays in your browser.
           </p>
+          <p className="pt-1">
+            If you have questions about this policy, contact us at{" "}
+            <a href="mailto:mediocreatbestdev@outlook.com" className="text-accent hover:underline">
+              mediocreatbestdev@outlook.com
+            </a>
+          </p>
         </div>
       </div>
 
