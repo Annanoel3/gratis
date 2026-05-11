@@ -367,12 +367,6 @@ function PanelContent({
             <span className="font-medium text-foreground">© 2026 TipHelper. All rights reserved.</span>
           </p>
           <div>
-            <p className="font-medium text-foreground mb-1">Your Content</p>
-            <p>
-              You retain full ownership of any data you input into TipHelper. By using the app, you grant TipHelper a limited, non-exclusive license to process your inputs solely for the purpose of providing tipping calculations and guidance to you.
-            </p>
-          </div>
-          <div>
             <p className="font-medium text-foreground mb-1">Restrictions</p>
             <p>
               You may not copy, reproduce, distribute, modify, or create derivative works from any part of the TipHelper application without prior written consent. Unauthorized use may violate copyright and applicable laws.
