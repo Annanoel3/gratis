@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Gratis',
   webDir: 'dist',
   server: {
-    url: 'https://gratis-69e237a7.base44.app',
+    url: 'https://rapid-gratis-tip-flow.base44.app',
     cleartext: false,
     androidScheme: 'https',
     allowNavigation: [
@@ -13,7 +13,7 @@ const config: CapacitorConfig = {
       'base44.app',
       'accounts.google.com',
       '*.google.com',
-      'gratis-69e237a7.base44.app',
+      'rapid-gratis-tip-flow.base44.app',
     ],
   },
   plugins: {

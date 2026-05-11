@@ -20,7 +20,7 @@ public class MainActivity extends BridgeActivity {
     private static final String TAG = "GratisAuth";
 
     private static final String[] IN_APP_DOMAINS = {
-        "gratis-69e237a7.base44.app",
+        "rapid-gratis-tip-flow.base44.app",
         "base44.app",
         "www.base44.app",
         "app.base44.app",
