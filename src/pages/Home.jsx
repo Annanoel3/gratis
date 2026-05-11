@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Settings } from "lucide-react";
+import { Settings, MapPin } from "lucide-react";
 import BillInput from "@/components/tip/BillInput";
 import SituationSelect from "@/components/tip/SituationSelect";
 import ServiceRating from "@/components/tip/ServiceRating";
@@ -126,20 +126,20 @@ export default function Home() {
               ? "Tipping customs vary wildly around the world — here's what you need to know."
               : "Research-backed tipping guidance for every situation — from sit-down dinners to lawn care."}
           </p>
-          {(budgetMode || (!notInUS && locationLabel)) && (
-            <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
+          <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
               {budgetMode && (
                 <span className="inline-flex items-center gap-1 text-xs bg-accent/15 text-accent rounded-full px-3 py-1 font-medium">
                   Budget Mode on
                 </span>
               )}
-              {!notInUS && locationLabel && (
-                <span className="inline-flex items-center gap-1 text-xs bg-secondary text-muted-foreground rounded-full px-3 py-1">
-                  📍 {locationLabel}
-                </span>
-              )}
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="inline-flex items-center gap-1.5 text-xs bg-secondary hover:bg-border text-muted-foreground rounded-full px-3 py-1 transition"
+              >
+                <MapPin className="w-3 h-3" />
+                {!notInUS && locationLabel ? locationLabel : notInUS && country.trim() ? country.trim() : "Set location"}
+              </button>
             </div>
-          )}
         </header>
 
         {notInUS ? (
