@@ -1,6 +1,6 @@
 const AD_UNIT_ID = 'ca-app-pub-7979856440890193/1081172636';
-const SHOW_EVERY_N_OPENS = 3;
-const AD_DELAY_MS = 10000;
+const SHOW_EVERY_N_OPENS = 4;
+const AD_DELAY_MS = 15000;
 
 let AdMob = null;
 let isNative = false;
@@ -41,12 +41,33 @@ export async function showInterstitialAd() {
   }
 }
 
+function isInputFocused() {
+  const active = document.activeElement;
+  return active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+}
+
 export async function maybeShowAdOnOpen() {
   const count = parseInt(localStorage.getItem('appOpenCount') || '0') + 1;
   localStorage.setItem('appOpenCount', String(count));
 
   if (count % SHOW_EVERY_N_OPENS === 0) {
+    // Wait initial delay
     await new Promise(resolve => setTimeout(resolve, AD_DELAY_MS));
+
+    // Check if an input is currently focused; if so, wait until it's blurred
+    if (isInputFocused()) {
+      await new Promise((resolve) => {
+        const checkInput = () => {
+          if (!isInputFocused()) {
+            resolve();
+          } else {
+            setTimeout(checkInput, 500);
+          }
+        };
+        checkInput();
+      });
+    }
+
     await showInterstitialAd();
   }
 }
