@@ -9,7 +9,7 @@ import VenueTier from "@/components/tip/VenueTier";
 import SettingsPanel from "@/components/tip/SettingsPanel";
 import InternationalInsight from "@/components/tip/InternationalInsight";
 import CurrencyToggle, { getCurrencyForCountry } from "@/components/tip/CurrencyToggle";
-import PullToRefresh from "@/components/PullToRefresh";
+
 import { computeTip } from "@/lib/tipScenarios";
 import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
 
@@ -88,7 +88,6 @@ export default function Home() {
   };
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-5 py-6 md:py-10" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}>
 
@@ -231,6 +230,5 @@ export default function Home() {
 
       </div>
     </div>
-    </PullToRefresh>
   );
 }
