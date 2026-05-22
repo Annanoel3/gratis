@@ -8,7 +8,7 @@ let isNative = false;
 async function loadCapacitor() {
   try {
     const { Capacitor, registerPlugin } = await import('@capacitor/core');
-    isNative = Capacitor.isNativePlatform();
+    issNative = Capacitor.isNativePlatform();
     if (isNative) {
       AdMob = registerPlugin('AdMob');
     }
