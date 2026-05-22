@@ -11,6 +11,15 @@ import { SettingsProvider } from '@/lib/SettingsContext';
 import { initAdMob, maybeShowAdOnOpen } from '@/lib/admob';
 import { useEffect } from 'react';
 
+// Sentry loaded via CDN in index.html
+const Sentry = window.Sentry;
+if (Sentry) {
+  Sentry.init({
+    dsn: "https://8f0342758efb1791f1afdf8be918fbb8@o4511434142580736.ingest.us.sentry.io/4511434154508288",
+    environment: "production",
+  });
+}
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
