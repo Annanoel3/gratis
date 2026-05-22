@@ -109,7 +109,7 @@ export default function SettingsPanel({ open, onClose }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed z-50 bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl md:hidden"
+            className="fixed z-50 bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl"
             style={{ paddingBottom: "env(safe-area-inset-bottom, 16px)", maxHeight: "90dvh" }}
           >
             <SheetHandle />
