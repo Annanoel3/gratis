@@ -4,175 +4,69 @@
 // discretionary: true → show "Optional — not expected per visit" label
 
 export const TIP_SCENARIOS = [
+  // ── Dining ─────────────────────────────────────────────────────────────────
+  { id: "restaurant_sitdown",   label: "Restaurant (Sit-Down)",           category: "Dining",        type: "percent", base: 18, venueAware: true },
+  { id: "buffet",               label: "Buffet Restaurant",               category: "Dining",        type: "percent", base: 10, venueAware: false },
+  { id: "bartender",            label: "Bartender",                       category: "Dining",        type: "percent", base: 18, venueAware: true },
+  { id: "barista",              label: "Barista / Coffee Shop",           category: "Dining",        type: "percent", base: 15, venueAware: false },
+  { id: "food_delivery",        label: "Food Delivery",                   category: "Dining",        type: "percent", base: 15, venueAware: false },
+  { id: "takeout",              label: "Takeout / Counter Service",       category: "Dining",        type: "percent", base: 10, venueAware: false },
+  { id: "catering",             label: "Catering Staff",                  category: "Dining",        type: "percent", base: 15, venueAware: false },
+
+  // ── Travel ─────────────────────────────────────────────────────────────────
+  { id: "taxi",                 label: "Taxi / Rideshare (Uber, Lyft)",   category: "Travel",        type: "percent", base: 15, venueAware: false },
+  { id: "shuttle",              label: "Shuttle / Limo Driver",           category: "Travel",        type: "percent", base: 18, venueAware: false },
+  { id: "valet",                label: "Valet Parking",                   category: "Travel",        type: "flat",    flatMin: 2, flatMid: 5,  flatMax: 10, venueAware: true },
+  { id: "tour_guide",           label: "Tour Guide",                      category: "Travel",        type: "percent", base: 15, venueAware: false },
+  { id: "skycap",               label: "Airport Skycap / Porter",         category: "Travel",        type: "flat",    flatMin: 2, flatMid: 2,  flatMax: 5,  venueAware: false },
+
+  // ── Hotel ──────────────────────────────────────────────────────────────────
+  { id: "hotel_housekeeping",   label: "Hotel Housekeeping",              category: "Hotel",         type: "flat",    flatMin: 2, flatMid: 5,  flatMax: 10, venueAware: true },
+  { id: "bellhop",              label: "Bellhop / Porter",                category: "Hotel",         type: "flat",    flatMin: 1, flatMid: 2,  flatMax: 5,  venueAware: false },
+  { id: "concierge",            label: "Concierge",                       category: "Hotel",         type: "flat",    flatMin: 5, flatMid: 10, flatMax: 25, venueAware: false },
+  { id: "doorman",              label: "Doorman",                         category: "Hotel",         type: "flat",    flatMin: 1, flatMid: 2,  flatMax: 5,  venueAware: false },
+  { id: "room_service",         label: "Room Service",                    category: "Hotel",         type: "percent", base: 18, venueAware: true },
+
   // ── Personal Care ──────────────────────────────────────────────────────────
-  {
-    id: "hair_stylist", label: "Hair Stylist / Colorist", category: "Personal Care",
-    type: "percent", base: 20, venueAware: true,
-    note: "Standard tip is 20%. Colorists and complex work like balayage or color corrections often warrant 20–22% due to the skill and chemical costs involved. If an assistant shampoos or rinses your color, tip them $3–5 separately.",
-  },
-  {
-    id: "nail_tech", label: "Nail Technician", category: "Personal Care",
-    type: "percent", base: 20, minTip: 5, venueAware: true,
-    note: "Standard is 20%. Add an extra 5% for nail art or gel applications. Never tip less than $5 regardless of service cost.",
-  },
-  {
-    id: "massage", label: "Massage Therapist", category: "Personal Care",
-    type: "percent", base: 20, venueAware: true,
-    note: "Standard is 20% for massage and spa treatments. Skip the tip if your provider is a licensed medical professional (nurse, PA, or doctor)—tipping is not expected for medical providers.",
-  },
-  {
-    id: "esthetician", label: "Esthetician (Facial / Waxing)", category: "Personal Care",
-    type: "percent", base: 20, venueAware: true,
-    note: "Standard is 20% for facials and waxing. Cash tips are preferred as many spas can't add gratuity to cards.",
-  },
-  {
-    id: "tattoo", label: "Tattoo Artist", category: "Personal Care",
-    type: "percent", base: 20,
-    note: "Industry standard is 20%. For custom designs or complex work, 25% is appropriate. For multi-session pieces, tip after each session—artists keep 100% of tips while a large portion of the service fee goes to the shop.",
-  },
-  {
-    id: "barber", label: "Barber", category: "Personal Care",
-    type: "percent", base: 20,
-    note: "Standard is 20%. Hot towel shaves and straight razor finishes typically warrant 20–25% due to the added artistry and risk involved.",
-  },
-  {
-    id: "makeup_artist", label: "Makeup Artist", category: "Personal Care",
-    type: "percent", base: 20,
-    note: "Standard is 20%. If multiple artists worked on your group, tip each artist individually based on their portion of the service.",
-  },
-  {
-    id: "personal_trainer", label: "Personal Trainer", category: "Personal Care",
-    type: "percent", base: 15, discretionary: true,
-    note: "Tips are not expected after every session. Consider tipping 15–20% at the end of a package of sessions, after hitting a major goal, or as an annual holiday tip. Note: some corporate gyms prohibit staff from accepting cash tips—ask discreetly if unsure.",
-  },
-
-  // ── Pet Services ───────────────────────────────────────────────────────────
-  {
-    id: "dog_groomer", label: "Dog Groomer", category: "Pet Services",
-    type: "percent", base: 20,
-    note: "Standard is 20%, the same as you'd tip a hair stylist. Consider tipping more for dogs that require extra time or special handling.",
-  },
-  {
-    id: "dog_walker", label: "Dog Walker", category: "Pet Services",
-    type: "percent", base: 20,
-    note: "Standard is 15–20% of the service cost. For regular walkers, a year-end bonus is also appreciated.",
-  },
-  {
-    id: "pet_sitter", label: "Pet Sitter", category: "Pet Services",
-    type: "percent", base: 20,
-    note: "Standard is 15–20%. For extended stays of 5+ days, a flat $20–50 tip is common. Consider tipping more if your pet required extra care or your sitter dealt with difficult circumstances.",
-  },
-
-  // ── Childcare ──────────────────────────────────────────────────────────────
-  {
-    id: "nanny", label: "Nanny / Au Pair", category: "Childcare",
-    type: "percent", base: 15, discretionary: true,
-    note: "Per-visit tipping is not the norm for full-time nannies. The standard is a holiday bonus of 1–2 weeks' pay. For occasional or part-time help, 15–20% on top of the hourly rate is appreciated.",
-  },
-  {
-    id: "babysitter", label: "Babysitter", category: "Childcare",
-    type: "percent", base: 15,
-    note: "A 15–20% tip on top of the agreed rate is appreciated for occasional sitters, especially for longer nights or multiple kids. Regular sitters typically receive a holiday bonus of $25–50 or a gift.",
-  },
-  {
-    id: "tutor", label: "Tutor", category: "Childcare",
-    type: "percent", base: 15, discretionary: true,
-    note: "Tips are not expected per session. A $20–50 thank-you at the end of a course or semester is the norm. Cash or gift cards are both appreciated.",
-  },
+  { id: "hairdresser",          label: "Hairdresser / Stylist",           category: "Personal Care", type: "percent", base: 20, venueAware: true },
+  { id: "barber",               label: "Barber",                          category: "Personal Care", type: "percent", base: 20, venueAware: false },
+  { id: "nail_tech",            label: "Nail Technician / Manicurist",    category: "Personal Care", type: "percent", base: 20, venueAware: true },
+  { id: "massage",              label: "Massage Therapist",               category: "Personal Care", type: "percent", base: 20, venueAware: true },
+  { id: "esthetician",          label: "Esthetician (Facial / Waxing)",   category: "Personal Care", type: "percent", base: 20, venueAware: true },
+  { id: "tattoo",               label: "Tattoo Artist",                   category: "Personal Care", type: "percent", base: 20, venueAware: false },
+  { id: "spa",                  label: "Spa Services",                    category: "Personal Care", type: "percent", base: 20, venueAware: true },
 
   // ── Home Services ──────────────────────────────────────────────────────────
-  {
-    id: "house_cleaner_onetime", label: "Housekeeper (One-Time / Deep Clean)", category: "Home Services",
-    type: "percent", base: 20,
-    note: "For one-time or deep cleans, tip 15–20% of the service cost or $10–25 per cleaner. These sessions are more labor-intensive than regular visits.",
-  },
-  {
-    id: "house_cleaner_recurring", label: "Housekeeper (Recurring)", category: "Home Services",
-    type: "percent", base: 15,
-    note: "For recurring weekly or bi-weekly cleaners, tipping every visit is optional. Many clients tip monthly or give a holiday bonus equal to one full cleaning's cost.",
-  },
-  {
-    id: "lawn_care", label: "Lawn Care / Landscaper", category: "Home Services",
-    type: "percent", base: 10,
-    note: "For one-time projects (spring cleanups, landscaping overhauls), 5–15% of the project cost or $20–50 per worker is typical. For regular mowing, $5–10 per visit or a $20–50 year-end bonus per crew member is the norm.",
-  },
-  {
-    id: "photographer", label: "Photographer", category: "Home Services",
-    type: "percent", base: 20, discretionary: true,
-    note: "Tipping is not required if your photographer owns their business (they set their own rates). If tipping, 15–20% is standard. Many clients give a flat $100–200 for event photography. A glowing online review is also highly valued.",
-  },
+  { id: "lawn_care",            label: "Lawn / Landscaping",              category: "Home Services", type: "flat",    flatMin: 10, flatMid: 20, flatMax: 50, venueAware: false },
+  { id: "house_cleaner",        label: "House Cleaner",                   category: "Home Services", type: "percent", base: 15, venueAware: false },
+  { id: "movers",               label: "Movers",                          category: "Home Services", type: "movers",
+    note: "Tip each mover individually in cash if possible. The amount should reflect the difficulty — stairs, heavy items, or tight spaces all warrant more." },
+  { id: "furniture_delivery",   label: "Furniture / Appliance Delivery",  category: "Home Services", type: "flat",    flatMin: 5, flatMid: 10, flatMax: 20, venueAware: false },
+  { id: "handyman",             label: "Handyman / Contractor",           category: "Home Services", type: "percent", base: 10, venueAware: false },
 
-  // ── Travel & Parking ───────────────────────────────────────────────────────
-  {
-    id: "valet", label: "Valet Parking", category: "Travel",
-    type: "flat", flatMin: 3, flatMid: 5, flatMax: 10, venueAware: true,
-    note: "Tip when picking up your car. At a standard venue, $3–5 is appropriate. At a luxury hotel, $5–10. You can also leave $1–2 at drop-off since the person parking your car may be different from the one retrieving it.",
-  },
-  {
-    id: "taxi", label: "Taxi / Rideshare (Uber/Lyft)", category: "Travel",
-    type: "hybrid_delivery", base: 15, hybridMin: 2,
-    note: "Standard is 15–20% of the fare. For very short trips, a minimum of $2–3 is appropriate even if that's a higher percentage. For airport rides with luggage, tip $5–10 regardless of fare.",
-  },
-  {
-    id: "airport_shuttle", label: "Airport Shuttle", category: "Travel",
-    type: "flat", flatMin: 5, flatMid: 7, flatMax: 10,
-    note: "For shared shuttles, $5–10 per rider plus $2–4 per bag assisted. For private/booked car services, 15–20% of the fare is standard.",
-  },
+  // ── Pet Services ───────────────────────────────────────────────────────────
+  { id: "dog_groomer",          label: "Dog Groomer",                     category: "Pet Services",  type: "percent", base: 20, venueAware: false },
+  { id: "dog_walker",           label: "Dog Walker",                      category: "Pet Services",  type: "percent", base: 15, venueAware: false },
+  { id: "pet_sitter",           label: "Pet Sitter",                      category: "Pet Services",  type: "percent", base: 15, venueAware: false },
 
-  // ── Hotel / Events ─────────────────────────────────────────────────────────
-  {
-    id: "hotel_housekeeping", label: "Hotel Housekeeping", category: "Hotel",
-    type: "flat", flatMin: 3, flatMid: 4, flatMax: 5, venueAware: true,
-    note: "Tip $3–5 per night in cash, left daily on the pillow (housekeeping staff rotates). Leaving it each morning ensures the right person gets it. A note that says 'For Housekeeping' removes any ambiguity.",
-  },
-  {
-    id: "concierge", label: "Concierge", category: "Hotel",
-    type: "flat", flatMin: 5, flatMid: 10, flatMax: 20,
-    note: "Tip per task, not per day. $5 for simple requests (directions, cab, wake-up call), $10–20 for harder favors (dinner reservations, show tickets). If the concierge went well out of their way, $20+ is appropriate.",
-  },
-  {
-    id: "coat_check", label: "Coat Check", category: "Hotel",
-    type: "flat", flatMin: 1, flatMid: 1, flatMax: 2,
-    note: "Leave $1–2 per coat or bag when you retrieve it. Cash only—coat check attendants rarely have card readers.",
-  },
-  {
-    id: "bathroom_attendant", label: "Bathroom Attendant", category: "Hotel",
-    type: "flat", flatMin: 1, flatMid: 2, flatMax: 3,
-    note: "$1 is the minimum if the attendant actively helped you. $2–3 is appropriate if they handed you towels, sprayed cologne/perfume, or provided extras.",
-  },
-
-  // ── Delivery & Moving ──────────────────────────────────────────────────────
-  {
-    id: "food_delivery", label: "Food Delivery", category: "Delivery",
-    type: "hybrid_delivery", base: 15, hybridMin: 4,
-    note: "Tip at least $4–5 or 15% of the order total—whichever is more. On platforms like DoorDash, drivers can see tip amounts before accepting your order. Low tips often mean longer wait times as drivers skip the order.",
-  },
-  {
-    id: "grocery_delivery", label: "Grocery Delivery (Instacart/etc.)", category: "Delivery",
-    type: "hybrid_delivery", base: 13, hybridMin: 5,
-    note: "Tip 12–15% of the order total with a $5 minimum. Consider tipping more for large or heavy orders, bad weather, or deliveries to multi-floor buildings.",
-  },
-  {
-    id: "furniture_delivery", label: "Furniture Delivery", category: "Delivery",
-    type: "flat", flatMin: 10, flatMid: 15, flatMax: 50,
-    note: "Tip each delivery person individually. $10–20 per person for standard drops. Increase to $20–50 per person if they carried items up stairs, assembled furniture, or removed your old pieces.",
-  },
-  {
-    id: "movers", label: "Movers", category: "Delivery",
-    type: "movers",
-    note: "Tip each mover individually in cash if possible. The amount should reflect the difficulty of the job—stairs, heavy items, or tight spaces all warrant a higher tip.",
-  },
+  // ── Other ──────────────────────────────────────────────────────────────────
+  { id: "babysitter",           label: "Babysitter / Nanny",              category: "Other",         type: "percent", base: 15, venueAware: false },
+  { id: "car_wash",             label: "Car Wash Attendant",              category: "Other",         type: "flat",    flatMin: 2, flatMid: 5, flatMax: 10, venueAware: false },
+  { id: "golf_caddy",           label: "Golf Caddy",                      category: "Other",         type: "percent", base: 50, venueAware: false },
+  { id: "coat_check",           label: "Coat Check",                      category: "Other",         type: "flat",    flatMin: 1, flatMid: 2, flatMax: 3, venueAware: false },
+  { id: "restroom_attendant",   label: "Restroom Attendant",              category: "Other",         type: "flat",    flatMin: 1, flatMid: 2, flatMax: 3, venueAware: false },
+  { id: "wedding_vendor",       label: "Wedding Vendor (DJ, Photographer, etc.)", category: "Other", type: "flat",    flatMin: 50, flatMid: 100, flatMax: 200, venueAware: false },
 ];
 
 // ── Category list ─────────────────────────────────────────────────────────────
 export const CATEGORIES = [
-  "Personal Care",
-  "Pet Services",
-  "Childcare",
-  "Home Services",
+  "Dining",
   "Travel",
   "Hotel",
-  "Delivery",
+  "Personal Care",
+  "Home Services",
+  "Pet Services",
+  "Other",
 ];
 
 // ── Venue tiers ───────────────────────────────────────────────────────────────
