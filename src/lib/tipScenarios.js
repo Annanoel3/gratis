@@ -64,71 +64,60 @@ export const TIP_SCENARIOS = [
   { id: "room_service", label: "Room Service", category: "Hotel", type: "percent", min: 15, base: 18, max: 20, note: "Check bill first — many hotels add a service charge automatically", venueAware: true },
 
   // ── Personal Care & Beauty ─────────────────────────────────────────────────
-  // Hair stylists: 15–20% is the industry standard; 20% is now widely expected.
-  { id: "hairdresser", label: "Hairdresser / Stylist", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is the current standard; cash tips are preferred by many stylists", venueAware: true },
-
-  // Barber: same norm as hairdresser — 15–20%.
-  { id: "barber", label: "Barber", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Cash preferred; $3–5 on a typical haircut is a good baseline" },
-
-  // Nails: 15–20% per NAILS Magazine and etiquette experts.
-  { id: "nail_tech", label: "Nail Technician / Manicurist", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard; cash ensures the technician keeps the full amount", venueAware: true },
-
-  // Massage: 15–20% unless at a medical/clinical setting (tipping not expected there).
-  { id: "massage", label: "Massage Therapist", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Skip tipping at medical/clinical settings; 20% at day spas", venueAware: true },
-
-  // Esthetician: same 15–20% norm as other salon services.
-  { id: "esthetician", label: "Esthetician (Facial / Waxing)", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard for facials and waxing services", venueAware: true },
-
-  // Tattoo: 15–25%; custom artwork warrants the higher end.
-  { id: "tattoo_artist", label: "Tattoo Artist", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard; tip more for custom or complex designs" },
-
-  // Spa: 15–20%; always check if a service charge is already included.
-  { id: "spa", label: "Spa Services", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Check if gratuity is already included in the service charge", venueAware: true },
+  { id: "hairdresser",       label: "Hairdresser / Stylist",              category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is the current standard; cash is preferred so the stylist keeps it all", venueAware: true },
+  { id: "barber",            label: "Barber",                             category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Cash preferred; $3–5 on a typical cut is a solid baseline" },
+  { id: "nail_tech",         label: "Nail Technician / Manicurist",       category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard — one of those places people always panic about. Cash is best.", venueAware: true },
+  { id: "nail_gel_acrylic",  label: "Gel / Acrylic / Nail Extensions",    category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Same 20% rule applies even on higher-priced services — don't tip less because the bill is bigger" },
+  { id: "massage",           label: "Massage Therapist",                  category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Skip at medical/clinical settings; 20% at day spas and wellness studios", venueAware: true },
+  { id: "esthetician",       label: "Esthetician (Facial)",               category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is expected — always check if a service charge is already on the bill", venueAware: true },
+  { id: "waxing",            label: "Waxing Specialist",                  category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% is the norm whether it's brows, legs, or a full wax — don't stiff them" },
+  { id: "lash_tech",         label: "Lash Technician",                    category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Precision work that takes 1–2 hours — 20% is absolutely expected" },
+  { id: "brow_tech",         label: "Brow Technician (Threading/Tinting)", category: "Personal Care", type: "percent", min: 15, base: 20, max: 20, note: "Often a quick service but 20% is still the right move; $3–5 minimum" },
+  { id: "tattoo_artist",     label: "Tattoo Artist",                      category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "20% minimum — more for large custom pieces. They spent serious time on your design." },
+  { id: "piercing",          label: "Body Piercing",                      category: "Personal Care", type: "percent", min: 10, base: 15, max: 20, note: "15–20% — often overlooked but very much appreciated by piercers" },
+  { id: "spa",               label: "Spa Services (General)",             category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Check if gratuity is already included — many spas add it automatically", venueAware: true },
+  { id: "spray_tan",         label: "Spray Tan",                          category: "Personal Care", type: "percent", min: 10, base: 15, max: 20, note: "15% is the norm; cash preferred. Many people forget to tip here." },
+  { id: "hair_color",        label: "Hair Color / Highlights / Balayage", category: "Personal Care", type: "percent", min: 15, base: 20, max: 25, note: "Always tip on the full service price, not just the cut portion — it's all one service", venueAware: true },
+  { id: "blowout",           label: "Blowout / Blowdry Bar",              category: "Personal Care", type: "percent", min: 15, base: 20, max: 20, note: "20% is standard even for a quick blowout — the time and skill still count" },
 
   // ── Home Services ──────────────────────────────────────────────────────────
-  // Lawn/landscaping: $10–20/visit per HomeAdvisor; not universally expected.
-  { id: "lawn_service", label: "Lawn / Landscaping", category: "Home Services", type: "flat", min: 10, base: 20, max: 50, note: "Not always expected; $20/visit or a seasonal cash bonus is common" },
-
-  // House cleaner: 15–20% or one visit's pay as a holiday tip.
-  { id: "house_cleaner", label: "House Cleaner", category: "Home Services", type: "percent", min: 10, base: 15, max: 20, note: "Regular cleaner: 15–20% per visit or one session's pay at holidays" },
-
-  // Movers: $20–40 per mover per day is the widely cited standard.
-  { id: "mover", label: "Movers", category: "Home Services", type: "flat", min: 20, base: 40, max: 80, note: "$20–40 per mover for a half-day; $40–80 for a full day" },
-
-  // Furniture delivery: $10–20 per person (2 people usually).
-  { id: "furniture_delivery", label: "Furniture / Appliance Delivery", category: "Home Services", type: "flat", min: 5, base: 10, max: 20, note: "$5–20 per person; more for heavy or complicated installs" },
-
-  // Handyman: tipping is optional and not standard industry practice.
-  { id: "handyman", label: "Handyman / Contractor", category: "Home Services", type: "percent", min: 0, base: 10, max: 15, note: "Not expected for licensed contractors; a tip is a nice gesture on small jobs" },
+  { id: "lawn_service",         label: "Lawn / Landscaping",                   category: "Home Services", type: "flat",    min: 10, base: 20, max: 50, note: "Not always expected; $20/visit or a seasonal bonus is common" },
+  { id: "house_cleaner",        label: "House Cleaner",                        category: "Home Services", type: "percent", min: 10, base: 15, max: 20, note: "15–20% per visit; one session's pay as a holiday gift is also great" },
+  { id: "mover",                label: "Movers",                               category: "Home Services", type: "flat",    min: 20, base: 40, max: 80, note: "$20–40 per mover for a half-day; $40–80 for a full day — cash is king" },
+  { id: "furniture_delivery",   label: "Furniture / Appliance Delivery",       category: "Home Services", type: "flat",    min: 5,  base: 10, max: 20, note: "$5–20 per person; tip more for heavy items or tricky installs" },
+  { id: "handyman",             label: "Handyman / Contractor",                category: "Home Services", type: "percent", min: 0,  base: 10, max: 15, note: "Not expected for licensed contractors; a tip is a kind gesture on small jobs" },
+  { id: "pool_cleaner",         label: "Pool Cleaner",                         category: "Home Services", type: "flat",    min: 10, base: 20, max: 50, note: "Not standard per-visit; $20–50 as a seasonal or holiday thank-you is common" },
+  { id: "pest_control",         label: "Pest Control",                         category: "Home Services", type: "percent", min: 0,  base: 10, max: 15, note: "Not expected — a small tip ($5–15) is appreciated for thorough work" },
+  { id: "window_cleaner",       label: "Window Cleaner",                       category: "Home Services", type: "percent", min: 0,  base: 10, max: 15, note: "Optional; $5–15 per job or 10–15% for larger homes" },
+  { id: "junk_removal",         label: "Junk Removal",                         category: "Home Services", type: "percent", min: 5,  base: 10, max: 20, note: "Not required but appreciated; $10–20 per worker for heavy lifting" },
+  { id: "snow_removal",         label: "Snow Removal / Plowing",               category: "Home Services", type: "flat",    min: 5,  base: 15, max: 30, note: "$10–20 per visit for shoveling; $20–50 seasonal bonus for a regular plow guy" },
+  { id: "painter_interior",     label: "Interior Painter",                     category: "Home Services", type: "percent", min: 0,  base: 10, max: 15, note: "Not expected for a big crew; $10–20 per painter for excellent work on smaller jobs" },
 
   // ── Pet Services ───────────────────────────────────────────────────────────
-  // Dog groomer: 15–20% per grooming industry standards.
-  { id: "dog_groomer", label: "Dog Groomer", category: "Pet Services", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard; more for difficult pets or extra services" },
-
-  // Dog walker: 10–20%; holiday equivalent of one week's pay.
-  { id: "dog_walker", label: "Dog Walker", category: "Pet Services", type: "percent", min: 10, base: 15, max: 20, note: "10–20% per walk; one week's pay at the holidays is a nice gift" },
-
-  // Pet sitter: 10–20% for multi-day stays.
-  { id: "pet_sitter", label: "Pet Sitter", category: "Pet Services", type: "percent", min: 10, base: 15, max: 20, note: "15–20% for multi-day stays; holiday bonus equal to one visit" },
+  { id: "dog_groomer",      label: "Dog Groomer",                    category: "Pet Services", type: "percent", min: 15, base: 20, max: 25, note: "20% is standard; tip more for large dogs, matted coats, or difficult behavior" },
+  { id: "dog_walker",       label: "Dog Walker",                     category: "Pet Services", type: "percent", min: 10, base: 15, max: 20, note: "10–20% per walk; one week's pay at the holidays is the standard gift" },
+  { id: "pet_sitter",       label: "Pet Sitter / Overnight Boarding", category: "Pet Services", type: "percent", min: 10, base: 15, max: 20, note: "15–20% for multi-day stays; a holiday bonus equal to one night's rate is kind" },
+  { id: "vet_tech",         label: "Veterinary Technician",          category: "Pet Services", type: "percent", min: 0,  base: 0,  max: 10, note: "Generally not expected or accepted at vet clinics — a thank-you card or treats goes further" },
+  { id: "mobile_vet",       label: "Mobile Vet / In-Home Vet",       category: "Pet Services", type: "percent", min: 0,  base: 10, max: 15, note: "They come to you — $10–20 is a nice gesture for a house-call visit" },
+  { id: "dog_trainer",      label: "Dog Trainer",                    category: "Pet Services", type: "percent", min: 0,  base: 10, max: 15, note: "Not standard for group classes; 10–15% for private sessions or board-and-train programs" },
 
   // ── Other ──────────────────────────────────────────────────────────────────
-  // Babysitter: 10–20% on top of the hourly rate for a good job.
-  { id: "babysitter", label: "Babysitter / Nanny", category: "Other", type: "percent", min: 10, base: 15, max: 20, note: "On top of the hourly rate; holiday gift = one week's pay" },
-
-  // Car wash: $2–5 for full-service; nothing expected for self-serve/tunnel.
-  { id: "car_wash", label: "Car Wash Attendant", category: "Other", type: "flat", min: 2, base: 5, max: 10, note: "For full-service hand washes only; not needed for tunnel/self-serve" },
-
-  // Golf caddy: $50–100 is cited by PGA etiquette guides; ~50% of the caddy fee.
-  { id: "golf_caddy", label: "Golf Caddy", category: "Other", type: "percent", min: 30, base: 50, max: 100, note: "~50% of the caddy fee is the PGA standard; $50–100 per bag per round", venueAware: true },
-
-  // Coat check: $1–2 per coat; standard across venues.
-  { id: "coat_check", label: "Coat Check", category: "Other", type: "flat", min: 1, base: 2, max: 3, note: "$1–2 per coat; tip when you pick up", venueAware: true },
-
-  // Restroom attendant: $1–2 if they hand you a towel or offer a product.
-  { id: "restroom_attendant", label: "Restroom Attendant", category: "Other", type: "flat", min: 1, base: 2, max: 3, note: "$1–2 if they provide a service; nothing required for a self-service setup" },
-
-  // Wedding vendor: $50–200 per vendor is widely cited by The Knot and Brides.
-  { id: "wedding_vendor", label: "Wedding Vendor (DJ, Photographer, etc.)", category: "Other", type: "flat", min: 50, base: 100, max: 200, note: "$50–200 per vendor depending on role; check contracts for included gratuity" },
+  { id: "babysitter",          label: "Babysitter / Nanny",                  category: "Other", type: "percent", min: 10, base: 15, max: 20,  note: "On top of the hourly rate; holiday gift = one week's pay" },
+  { id: "car_wash",            label: "Car Wash Attendant",                  category: "Other", type: "flat",    min: 2,  base: 5,  max: 10,  note: "For full-service hand washes only; not needed for tunnel/self-serve" },
+  { id: "mobile_car_detailer", label: "Mobile Car Detailer",                 category: "Other", type: "percent", min: 10, base: 15, max: 20,  note: "They come to you — 15–20% is appreciated; tip more for heavy detail work" },
+  { id: "golf_caddy",          label: "Golf Caddy",                          category: "Other", type: "percent", min: 30, base: 50, max: 100, note: "~50% of the caddy fee is the PGA standard; $50–100 per bag per round", venueAware: true },
+  { id: "coat_check",          label: "Coat Check",                          category: "Other", type: "flat",    min: 1,  base: 2,  max: 3,   note: "$1–2 per coat; tip when you pick up", venueAware: true },
+  { id: "restroom_attendant",  label: "Restroom Attendant",                  category: "Other", type: "flat",    min: 1,  base: 2,  max: 3,   note: "$1–2 if they hand you a towel or product; nothing required for self-service" },
+  { id: "wedding_vendor",      label: "Wedding Vendor (DJ, Photographer…)",  category: "Other", type: "flat",    min: 50, base: 100, max: 200, note: "$50–200 per vendor; always check contracts for included gratuity" },
+  { id: "sommelier",           label: "Sommelier / Wine Steward",            category: "Other", type: "percent", min: 10, base: 15, max: 20,  note: "Tip on the wine portion only — 15% on the bottle price is standard", venueAware: true },
+  { id: "personal_trainer",    label: "Personal Trainer",                    category: "Other", type: "percent", min: 10, base: 15, max: 20,  note: "Not always expected but a nice gesture; holiday gift equivalent to one session" },
+  { id: "music_lesson",        label: "Music / Dance / Art Instructor",      category: "Other", type: "percent", min: 0,  base: 10, max: 15,  note: "Not standard — a holiday gift card or one lesson's worth is common" },
+  { id: "tailor_seamstress",   label: "Tailor / Seamstress / Alterations",   category: "Other", type: "percent", min: 0,  base: 10, max: 15,  note: "Not expected but appreciated for complex or rush work" },
+  { id: "parking_attendant",   label: "Parking Attendant (Non-Valet)",       category: "Other", type: "flat",    min: 1,  base: 2,  max: 5,   note: "$1–2 when they direct you or assist; not required for unmanned lots" },
+  { id: "furniture_assembler", label: "Furniture Assembler (e.g. IKEA)",     category: "Other", type: "flat",    min: 5,  base: 10, max: 20,  note: "Not expected but kind for a complex build; $10–20 per person" },
+  { id: "casino_dealer",       label: "Casino Dealer",                       category: "Other", type: "flat",    min: 1,  base: 5,  max: 20,  note: "\"Toke\" the dealer $1–5 per session; more if you're on a winning streak" },
+  { id: "holiday_letter_carrier", label: "Mail / Package Carrier (Holiday)", category: "Other", type: "flat",   min: 10, base: 20, max: 25,  note: "USPS allows up to $20 in gifts; UPS/FedEx $20–25; give at the holidays" },
+  { id: "newspaper_carrier",   label: "Newspaper Carrier",                   category: "Other", type: "flat",   min: 10, base: 25, max: 50,  note: "Typically a seasonal holiday tip of $25–50 rather than per-delivery" },
 ];
 
 // ── Venue tier multipliers ────────────────────────────────────────────────────
