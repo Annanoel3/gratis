@@ -49,8 +49,18 @@ export const TIP_SCENARIOS = [
   { id: "dog_walker",           label: "Dog Walker",                      category: "Pet Services",  type: "percent", base: 15, venueAware: false },
   { id: "pet_sitter",           label: "Pet Sitter",                      category: "Pet Services",  type: "percent", base: 15, venueAware: false },
 
+  // ── Childcare ──────────────────────────────────────────────────────────────
+  { id: "babysitter_nanny",     label: "Babysitter / Nanny",              category: "Childcare",     type: "percent", base: 15, venueAware: false },
+  { id: "daycare",              label: "Daycare / Childcare Center",      category: "Childcare",     type: "percent", base: 10, venueAware: false },
+  { id: "au_pair",              label: "Au Pair",                         category: "Childcare",     type: "percent", base: 15, venueAware: false },
+
+  // ── Delivery ───────────────────────────────────────────────────────────────
+  { id: "food_delivery_app",    label: "Food Delivery (DoorDash, Uber Eats, etc.)", category: "Delivery", type: "percent", base: 15, venueAware: false },
+  { id: "grocery_delivery",     label: "Grocery Delivery (Instacart, etc.)",        category: "Delivery", type: "percent", base: 10, venueAware: false },
+  { id: "package_delivery",     label: "Package / Courier Delivery",                category: "Delivery", type: "flat",    flatMin: 2, flatMid: 5, flatMax: 10, venueAware: false },
+  { id: "alcohol_delivery",     label: "Alcohol / Beverage Delivery",               category: "Delivery", type: "percent", base: 15, venueAware: false },
+
   // ── Other ──────────────────────────────────────────────────────────────────
-  { id: "babysitter",           label: "Babysitter / Nanny",              category: "Other",         type: "percent", base: 15, venueAware: false },
   { id: "car_wash",             label: "Car Wash Attendant",              category: "Other",         type: "flat",    flatMin: 2, flatMid: 5, flatMax: 10, venueAware: false },
   { id: "golf_caddy",           label: "Golf Caddy",                      category: "Other",         type: "percent", base: 50, venueAware: false },
   { id: "coat_check",           label: "Coat Check",                      category: "Other",         type: "flat",    flatMin: 1, flatMid: 2, flatMax: 3, venueAware: false },
@@ -66,6 +76,8 @@ export const CATEGORIES = [
   "Personal Care",
   "Home Services",
   "Pet Services",
+  "Childcare",
+  "Delivery",
   "Other",
 ];
 
