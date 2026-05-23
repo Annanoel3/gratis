@@ -110,7 +110,7 @@ export default function Home() {
         {/* Header */}
         <header className="text-center mb-6">
           <div className="inline-block text-[10px] uppercase tracking-[0.3em] text-accent font-semibold mb-4">
-            TipHelper
+            Gratis
           </div>
           <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] tracking-tight">
             {notInUS && country.trim() ? (

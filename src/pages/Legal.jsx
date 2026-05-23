@@ -12,11 +12,11 @@ export default function Legal() {
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to TipHelper
+          Back to Gratis
         </Link>
 
         <header className="mb-10">
-          <div className="text-[10px] uppercase tracking-[0.3em] text-accent font-semibold mb-3">TipHelper</div>
+          <div className="text-[10px] uppercase tracking-[0.3em] text-accent font-semibold mb-3">Gratis</div>
           <h1 className="font-serif text-4xl md:text-5xl leading-tight">Privacy &amp; Legal</h1>
           <p className="mt-3 text-muted-foreground text-sm">Last updated: May 2026</p>
         </header>
@@ -28,7 +28,7 @@ export default function Legal() {
             <h2 className="font-serif text-2xl mb-4">Privacy Policy</h2>
             <div className="space-y-3 text-muted-foreground">
               <p>
-                <span className="font-medium text-foreground">We don't collect any personal data.</span> TipHelper stores
+                <span className="font-medium text-foreground">We don't collect any personal data.</span> Gratis stores
                 your preferences (dark mode, location, budget mode) only in your device's local storage — nothing is sent
                 to any server.
               </p>
@@ -57,19 +57,19 @@ export default function Legal() {
             <h2 className="font-serif text-2xl mb-4">Terms of Use</h2>
             <div className="space-y-3 text-muted-foreground">
               <p>
-                By using TipHelper, you agree to use the app for lawful, personal purposes only. The tipping guidance
+                By using Gratis, you agree to use the app for lawful, personal purposes only. The tipping guidance
                 provided is informational and based on general US and international customs — it is not financial or
                 professional advice.
               </p>
               <p>
                 We make no guarantees that the suggested tip amounts are appropriate for every situation. Always use your
-                own judgment. TipHelper is not liable for any outcomes resulting from following the app's suggestions.
+                own judgment. Gratis is not liable for any outcomes resulting from following the app's suggestions.
               </p>
               <p>
                 We reserve the right to modify or discontinue the app or any of its features at any time without notice.
               </p>
               <p>
-                These terms are governed by applicable law. By continuing to use TipHelper, you accept any updates to
+                These terms are governed by applicable law. By continuing to use Gratis, you accept any updates to
                 these terms.
               </p>
             </div>
@@ -82,17 +82,17 @@ export default function Legal() {
             <h2 className="font-serif text-2xl mb-4">Copyright &amp; Intellectual Property</h2>
             <div className="space-y-3 text-muted-foreground">
               <p>
-                <span className="font-medium text-foreground">© 2026 TipHelper. All rights reserved.</span>
+                <span className="font-medium text-foreground">© 2026 Gratis. All rights reserved.</span>
               </p>
               <p>
-                All content, design, code, and tipping guidance within TipHelper — including but not limited to text,
-                graphics, user interface elements, and logic — are the intellectual property of TipHelper and are
+                All content, design, code, and tipping guidance within Gratis — including but not limited to text,
+                graphics, user interface elements, and logic — are the intellectual property of Gratis and are
                 protected under applicable copyright laws.
               </p>
               <p className="font-medium text-foreground">Restrictions</p>
               <p>
                 You may not copy, reproduce, distribute, modify, or create derivative works from any part of the
-                TipHelper application without prior written consent. Unauthorized use may violate copyright and
+                Gratis application without prior written consent. Unauthorized use may violate copyright and
                 applicable laws.
               </p>
               <p>
