@@ -11,6 +11,8 @@ const CATEGORY_ICONS = {
   "Personal Care": "💅",
   "Home Services": "🏠",
   "Pet Services":  "🐾",
+  "Childcare":     "👶",
+  "Delivery":      "📦",
   "Other":         "✨",
 };
 
