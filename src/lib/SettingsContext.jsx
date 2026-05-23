@@ -8,139 +8,227 @@ const SettingsContext = createContext();
 // list `cities` — an array of {id, label, adj, note?}.
 // Adjustment scale: +2.5 = very high COL city, 0 = national avg, -2 = rural/low-norm.
 export const STATES = [
-  { id: "national", label: "— No preference —", adj: 0, cities: [] },
-
-  // States with significant city-level variation
-  // State adj = state_avg - 18 (so 3-star tip matches real average)
-  // City adj = city_expected_avg - 18 (replaces state adj, not additive)
-  {
-    id: "ny", label: "New York", adj: 0.7,  // 18.7% state avg
+  { id: "national", label: "No preference", adj: 0, cities: [] },
+  { id: "al", label: "Alabama", adj: 1, cities: [] },
+  { id: "ak", label: "Alaska", adj: 1, cities: [] },
+  { id: "az", label: "Arizona", adj: 1,
     cities: [
-      // NYC is a well-known outlier — 20%+ is the floor, power users tip 22-25%
-      { id: "ny_nyc",     label: "New York City",    adj: 3.0,  note: "21%+ is the norm here; 20% is considered low" },
-      // Upstate cities track close to state average
-      { id: "ny_buffalo", label: "Buffalo",          adj: 0.5  },
-      { id: "ny_albany",  label: "Albany",           adj: 0.5  },
-      { id: "ny_other",   label: "Rest of New York", adj: 0.5  },
-    ],
+      { id: "az_phoenix", label: "Phoenix", adj: 1 },
+      { id: "az_scottsdale", label: "Scottsdale", adj: 2 },
+      { id: "az_tucson", label: "Tucson", adj: 0 },
+      { id: "az_other", label: "Rest of Arizona", adj: 1 },
+    ]
   },
-  {
-    id: "ca", label: "California", adj: -0.7,  // 17.3% state avg → adj = 17.3 - 18 = -0.7
+  { id: "ar", label: "Arkansas", adj: 0, cities: [] },
+  { id: "ca", label: "California", adj: -1,
+    note: "CA requires full minimum wage for tipped workers, reducing tip pressure vs. other states.",
     cities: [
-      // SF tech culture tips well despite low state avg
-      { id: "ca_sf",    label: "San Francisco / Bay Area", adj: 2.0,  note: "20% is the baseline expectation; many tip 20–22%" },
-      // LA is slightly above state avg but below SF
-      { id: "ca_la",    label: "Los Angeles",              adj: 0.5  },
-      { id: "ca_sd",    label: "San Diego",                adj: -0.5 },
-      { id: "ca_sac",   label: "Sacramento",               adj: -0.5 },
-      { id: "ca_other", label: "Rest of California",       adj: -1.0 },
-    ],
+      { id: "ca_sf", label: "San Francisco / Bay Area", adj: 1 },
+      { id: "ca_la", label: "Los Angeles", adj: 0 },
+      { id: "ca_sd", label: "San Diego", adj: 0 },
+      { id: "ca_sac", label: "Sacramento", adj: -1 },
+      { id: "ca_other", label: "Rest of California", adj: -1 },
+    ]
   },
-  {
-    id: "tx", label: "Texas", adj: -0.7,  // 18.7% state avg → adj = 18.7 - 18 = -0.7 (but wait: actually state-level adj = -0.7)
-    // However we set state adj = -0.7 but when a city is selected it replaces that entirely
+  { id: "co", label: "Colorado", adj: 2,
     cities: [
-      // Austin: vibrant food culture, higher incomes, tech scene → 20%+ common, 25% at 5-star
-      // Target: 5-star mid = 18 * 1.28 + adj = 25 → adj = 1.96 ≈ 2.0
-      { id: "tx_austin",  label: "Austin",              adj: 2.0,  note: "Generous tipping city — 20%+ is common; 25% for exceptional service" },
-      // DFW tracks roughly at state avg or slightly above
-      { id: "tx_dallas",  label: "Dallas / Fort Worth", adj: 0.0  },
-      // Houston similar to DFW
-      { id: "tx_houston", label: "Houston",             adj: -0.3 },
-      // SA slightly below state avg
-      { id: "tx_sa",      label: "San Antonio",         adj: -0.7 },
-      // Rural TX tips around 15–16%
-      { id: "tx_other",   label: "Rest of Texas",       adj: -2.0, note: "15% is the common baseline outside major cities" },
-    ],
+      { id: "co_denver", label: "Denver", adj: 2 },
+      { id: "co_boulder", label: "Boulder", adj: 2 },
+      { id: "co_springs", label: "Colorado Springs", adj: 0 },
+      { id: "co_other", label: "Rest of Colorado", adj: 2 },
+    ]
   },
-  {
-    id: "il", label: "Illinois", adj: 1.0,  // 19.0% state avg → adj = 1.0
+  { id: "ct", label: "Connecticut", adj: 1, cities: [] },
+  { id: "de", label: "Delaware", adj: 4, note: "Highest average tipping state in the US per 2025 data.", cities: [] },
+  { id: "fl", label: "Florida", adj: 0,
     cities: [
-      // Chicago is a well-known strong tipping city — 20% is standard
-      { id: "il_chicago", label: "Chicago",          adj: 2.0,  note: "20% is the standard in Chicago; 18% reads as low" },
-      { id: "il_other",   label: "Rest of Illinois", adj: 0.0  },
-    ],
+      { id: "fl_miami", label: "Miami", adj: 2 },
+      { id: "fl_orlando", label: "Orlando", adj: 0 },
+      { id: "fl_tampa", label: "Tampa", adj: 0 },
+      { id: "fl_jax", label: "Jacksonville", adj: -1 },
+      { id: "fl_ftl", label: "Fort Lauderdale", adj: 1 },
+      { id: "fl_other", label: "Rest of Florida", adj: 0 },
+    ]
   },
-  {
-    id: "fl", label: "Florida", adj: 0.2,  // 18.2% state avg → adj = 0.2
+  { id: "ga", label: "Georgia", adj: 1,
     cities: [
-      // Miami tips well relative to FL avg (tourism, Latin culture)
-      { id: "fl_miami",   label: "Miami",           adj: 1.5,  note: "Tourism hub; 20% is widely expected" },
-      // Orlando and Tampa near state avg
-      { id: "fl_orlando", label: "Orlando",         adj: 0.2  },
-      { id: "fl_tampa",   label: "Tampa",           adj: 0.2  },
-      { id: "fl_other",   label: "Rest of Florida", adj: -0.5 },
-    ],
+      { id: "ga_atlanta", label: "Atlanta", adj: 2 },
+      { id: "ga_savannah", label: "Savannah", adj: 0 },
+      { id: "ga_other", label: "Rest of Georgia", adj: 1 },
+    ]
   },
-  {
-    id: "ma", label: "Massachusetts", adj: 1.3,  // 19.3% state avg → adj = 1.3
+  { id: "hi", label: "Hawaii", adj: 0, cities: [] },
+  { id: "id", label: "Idaho", adj: 2, cities: [] },
+  { id: "il", label: "Illinois", adj: 1,
     cities: [
-      // Boston tips above state avg — professional city
-      { id: "ma_boston", label: "Boston",                adj: 2.0,  note: "20%+ is standard in Boston" },
-      { id: "ma_other",  label: "Rest of Massachusetts", adj: 1.0  },
-    ],
+      { id: "il_chicago", label: "Chicago", adj: 2 },
+      { id: "il_springfield", label: "Springfield", adj: 0 },
+      { id: "il_other", label: "Rest of Illinois", adj: 1 },
+    ]
   },
-  {
-    id: "wa", label: "Washington", adj: -0.2,  // 17.8% state avg → adj = -0.2
+  { id: "in", label: "Indiana", adj: 2,
+    note: "Tip credit state — workers depend heavily on tips.",
     cities: [
-      // Seattle is above state avg despite low state number (rural WA drags it down)
-      { id: "wa_seattle", label: "Seattle",            adj: 1.5,  note: "High COL; 19–20% is standard in the city" },
-      { id: "wa_other",   label: "Rest of Washington", adj: -1.5 },
-    ],
+      { id: "in_indy", label: "Indianapolis", adj: 2 },
+      { id: "in_other", label: "Rest of Indiana", adj: 2 },
+    ]
   },
-  {
-    id: "co", label: "Colorado", adj: 1.5,  // 19.5% state avg → adj = 1.5
+  { id: "ia", label: "Iowa", adj: 2, cities: [] },
+  { id: "ks", label: "Kansas", adj: 2, cities: [] },
+  { id: "ky", label: "Kentucky", adj: 2,
+    note: "Strong tipping culture reinforced by tip credit wage laws.",
     cities: [
-      // Denver/Boulder tip well — active, affluent population
-      { id: "co_denver", label: "Denver / Boulder", adj: 2.0,  note: "20%+ is common in Denver and Boulder" },
-      { id: "co_other",  label: "Rest of Colorado", adj: 0.5  },
-    ],
+      { id: "ky_louisville", label: "Louisville", adj: 2 },
+      { id: "ky_lexington", label: "Lexington", adj: 2 },
+      { id: "ky_other", label: "Rest of Kentucky", adj: 2 },
+    ]
   },
-
-  // States where tips are fairly uniform — no city drill-down needed
-  // adj = state_avg - 18 (OysterLink data, rounded to 1 decimal)
-  { id: "ak", label: "Alaska",          adj: 0.8  },                                                              // 18.8%
-  { id: "az", label: "Arizona",         adj: 1.1,  cities: [] },                                                  // 19.1%
-  { id: "ar", label: "Arkansas",        adj: 0.5,  note: "18–19% is the local norm" },                            // 18.5%
-  { id: "ct", label: "Connecticut",     adj: 1.1  },                                                              // 19.1%
-  { id: "dc", label: "Washington D.C.", adj: 3.0,  note: "21%+ is common in DC — high COL, professional crowd" }, // well above avg
-  { id: "de", label: "Delaware",        adj: 3.5,  note: "Delaware tips the most of any state — 21.5% average" }, // 21.5%
-  { id: "ga", label: "Georgia",         adj: 0.8  },                                                              // 18.8%
-  { id: "hi", label: "Hawaii",          adj: 0.5,  note: "18–19% is standard; resort service often included" },   // 18.5%
-  { id: "id", label: "Idaho",           adj: 1.5  },                                                              // 19.5%
-  { id: "in", label: "Indiana",         adj: 2.4,  note: "Indiana averages 20.4% — one of the highest in the US" }, // 20.4%
-  { id: "ia", label: "Iowa",            adj: 1.8  },                                                              // 19.8%
-  { id: "ks", label: "Kansas",          adj: 1.8  },                                                              // 19.8%
-  { id: "ky", label: "Kentucky",        adj: 2.3,  note: "Kentucky averages 20.3% — tip generously" },            // 20.3%
-  { id: "la", label: "Louisiana",       adj: 0.4  },                                                              // 18.4%
-  { id: "me", label: "Maine",           adj: 1.7  },                                                              // 19.7%
-  { id: "md", label: "Maryland",        adj: 1.3  },                                                              // 19.3%
-  { id: "mi", label: "Michigan",        adj: 1.9  },                                                              // 19.9%
-  { id: "mn", label: "Minnesota",       adj: 1.0  },                                                              // 19.0%
-  { id: "ms", label: "Mississippi",     adj: 0.7,  note: "18–19% is the norm here" },                             // 18.7%
-  { id: "mo", label: "Missouri",        adj: 1.9  },                                                              // 19.9%
-  { id: "mt", label: "Montana",         adj: 1.9  },                                                              // 19.9%
-  { id: "ne", label: "Nebraska",        adj: 1.7  },                                                              // 19.7%
-  { id: "nv", label: "Nevada",          adj: 0.1  },                                                              // 18.1%
-  { id: "nh", label: "New Hampshire",   adj: 2.4,  note: "NH averages 20.4% — tip generously" },                  // 20.4%
-  { id: "nj", label: "New Jersey",      adj: 0.7  },                                                              // 18.7%
-  { id: "nm", label: "New Mexico",      adj: 0.9  },                                                              // 18.9%
-  { id: "nc", label: "North Carolina",  adj: 1.4  },                                                              // 19.4%
-  { id: "nd", label: "North Dakota",    adj: 1.3  },                                                              // 19.3%
-  { id: "oh", label: "Ohio",            adj: 2.3  },                                                              // 20.3%
-  { id: "ok", label: "Oklahoma",        adj: 1.0  },                                                              // 19.0%
-  { id: "or", label: "Oregon",          adj: 1.0  },                                                              // 19.0%
-  { id: "pa", label: "Pennsylvania",    adj: 1.8  },                                                              // 19.8%
-  { id: "ri", label: "Rhode Island",    adj: 2.0  },                                                              // 20.0%
-  { id: "sc", label: "South Carolina",  adj: 2.0  },                                                              // 20.0%
-  { id: "sd", label: "South Dakota",    adj: 1.4  },                                                              // 19.4%
-  { id: "tn", label: "Tennessee",       adj: 1.2  },                                                              // 19.2%
-  { id: "ut", label: "Utah",            adj: 0.7  },                                                              // 18.7%
-  { id: "vt", label: "Vermont",         adj: 1.4  },                                                              // 19.4%
-  { id: "va", label: "Virginia",        adj: 1.1  },                                                              // 19.1%
-  { id: "wv", label: "West Virginia",   adj: 2.5,  note: "WV averages 20.5% — one of the highest in the US" },    // 20.5%
-  { id: "wi", label: "Wisconsin",       adj: 2.0  },                                                              // 20.0%
-  { id: "wy", label: "Wyoming",         adj: 2.3  },                                                              // 20.3%
+  { id: "la", label: "Louisiana", adj: 0,
+    cities: [
+      { id: "la_nola", label: "New Orleans", adj: 2, note: "Strong hospitality culture; 20% is the baseline at sit-down restaurants." },
+      { id: "la_baton", label: "Baton Rouge", adj: 0 },
+      { id: "la_other", label: "Rest of Louisiana", adj: 0 },
+    ]
+  },
+  { id: "me", label: "Maine", adj: 2, cities: [] },
+  { id: "md", label: "Maryland", adj: 1,
+    cities: [
+      { id: "md_baltimore", label: "Baltimore", adj: 1 },
+      { id: "md_annapolis", label: "Annapolis", adj: 2 },
+      { id: "md_other", label: "Rest of Maryland", adj: 1 },
+    ]
+  },
+  { id: "ma", label: "Massachusetts", adj: 1,
+    cities: [
+      { id: "ma_boston", label: "Boston", adj: 2 },
+      { id: "ma_cambridge", label: "Cambridge", adj: 2 },
+      { id: "ma_worcester", label: "Worcester", adj: 0 },
+      { id: "ma_other", label: "Rest of Massachusetts", adj: 1 },
+    ]
+  },
+  { id: "mi", label: "Michigan", adj: 2,
+    cities: [
+      { id: "mi_detroit", label: "Detroit", adj: 1 },
+      { id: "mi_annarbor", label: "Ann Arbor", adj: 2 },
+      { id: "mi_gr", label: "Grand Rapids", adj: 1 },
+      { id: "mi_other", label: "Rest of Michigan", adj: 2 },
+    ]
+  },
+  { id: "mn", label: "Minnesota", adj: 1,
+    cities: [
+      { id: "mn_mpls", label: "Minneapolis", adj: 1 },
+      { id: "mn_stpaul", label: "St. Paul", adj: 1 },
+      { id: "mn_other", label: "Rest of Minnesota", adj: 1 },
+    ]
+  },
+  { id: "ms", label: "Mississippi", adj: 1, cities: [] },
+  { id: "mo", label: "Missouri", adj: 2,
+    cities: [
+      { id: "mo_kc", label: "Kansas City", adj: 2 },
+      { id: "mo_stl", label: "St. Louis", adj: 1 },
+      { id: "mo_other", label: "Rest of Missouri", adj: 2 },
+    ]
+  },
+  { id: "mt", label: "Montana", adj: 2, cities: [] },
+  { id: "ne", label: "Nebraska", adj: 2, cities: [] },
+  { id: "nv", label: "Nevada", adj: 0,
+    note: "Tourism-heavy; inconsistent tipping from visitors unfamiliar with local customs.",
+    cities: [
+      { id: "nv_vegas", label: "Las Vegas", adj: 2, note: "Hospitality capital — 20% expected, especially at casino restaurants." },
+      { id: "nv_reno", label: "Reno", adj: 0 },
+      { id: "nv_other", label: "Rest of Nevada", adj: 0 },
+    ]
+  },
+  { id: "nh", label: "New Hampshire", adj: 2, note: "Tip credit state with strong tipping culture.", cities: [] },
+  { id: "nj", label: "New Jersey", adj: 1, cities: [] },
+  { id: "nm", label: "New Mexico", adj: 1, cities: [] },
+  { id: "ny", label: "New York", adj: 1,
+    note: "State average ~19%; NYC culture pushes 20-22% as the social norm.",
+    cities: [
+      { id: "ny_nyc", label: "New York City", adj: 4, note: "20-22% is the baseline expectation. 15% is considered low by many NYC servers." },
+      { id: "ny_brooklyn", label: "Brooklyn", adj: 3 },
+      { id: "ny_buffalo", label: "Buffalo", adj: 0 },
+      { id: "ny_albany", label: "Albany", adj: 0 },
+      { id: "ny_other", label: "Rest of New York", adj: 1 },
+    ]
+  },
+  { id: "nc", label: "North Carolina", adj: 1,
+    cities: [
+      { id: "nc_charlotte", label: "Charlotte", adj: 2 },
+      { id: "nc_raleigh", label: "Raleigh", adj: 1 },
+      { id: "nc_asheville", label: "Asheville", adj: 2 },
+      { id: "nc_other", label: "Rest of North Carolina", adj: 1 },
+    ]
+  },
+  { id: "nd", label: "North Dakota", adj: 1, cities: [] },
+  { id: "oh", label: "Ohio", adj: 2,
+    cities: [
+      { id: "oh_columbus", label: "Columbus", adj: 2 },
+      { id: "oh_cleveland", label: "Cleveland", adj: 1 },
+      { id: "oh_cincy", label: "Cincinnati", adj: 2 },
+      { id: "oh_other", label: "Rest of Ohio", adj: 2 },
+    ]
+  },
+  { id: "ok", label: "Oklahoma", adj: 1, cities: [] },
+  { id: "or", label: "Oregon", adj: 1,
+    note: "Oregon requires full minimum wage for tipped workers, reducing tip pressure.",
+    cities: [
+      { id: "or_portland", label: "Portland", adj: 1, note: "Workers benefit from Oregon's full minimum wage; tips still expected." },
+      { id: "or_eugene", label: "Eugene", adj: 0 },
+      { id: "or_other", label: "Rest of Oregon", adj: 1 },
+    ]
+  },
+  { id: "pa", label: "Pennsylvania", adj: 2,
+    cities: [
+      { id: "pa_philly", label: "Philadelphia", adj: 2 },
+      { id: "pa_pittsburgh", label: "Pittsburgh", adj: 1 },
+      { id: "pa_other", label: "Rest of Pennsylvania", adj: 2 },
+    ]
+  },
+  { id: "ri", label: "Rhode Island", adj: 2, cities: [] },
+  { id: "sc", label: "South Carolina", adj: 2, cities: [] },
+  { id: "sd", label: "South Dakota", adj: 1, cities: [] },
+  { id: "tn", label: "Tennessee", adj: 1,
+    cities: [
+      { id: "tn_nashville", label: "Nashville", adj: 2, note: "Strong tourism and hospitality scene; 20% is the norm." },
+      { id: "tn_memphis", label: "Memphis", adj: 0 },
+      { id: "tn_other", label: "Rest of Tennessee", adj: 1 },
+    ]
+  },
+  { id: "tx", label: "Texas", adj: 1,
+    note: "State average ~19%; Austin and tech-hub areas trend higher. DFW historically lower.",
+    cities: [
+      { id: "tx_austin", label: "Austin", adj: 2, note: "Tech-heavy, younger demographic. 20% is the comfortable norm; under 15% is noticed." },
+      { id: "tx_dallas", label: "Dallas", adj: 0, note: "DFW is the lowest-tipping major metro in Texas. 18% is typical; 15% is not unusual here." },
+      { id: "tx_fortworth", label: "Fort Worth", adj: 0 },
+      { id: "tx_houston", label: "Houston", adj: 1, note: "Diverse city, strong restaurant culture, close to national average." },
+      { id: "tx_antonio", label: "San Antonio", adj: 2, note: "Slightly above Texas average per Square data. Strong local culture of generosity." },
+      { id: "tx_elpaso", label: "El Paso", adj: -1 },
+      { id: "tx_other", label: "Rest of Texas", adj: 1 },
+    ]
+  },
+  { id: "ut", label: "Utah", adj: 1, cities: [] },
+  { id: "vt", label: "Vermont", adj: 1, cities: [] },
+  { id: "va", label: "Virginia", adj: 1,
+    cities: [
+      { id: "va_richmond", label: "Richmond", adj: 1 },
+      { id: "va_vb", label: "Virginia Beach", adj: 1 },
+      { id: "va_arlington", label: "Arlington", adj: 2 },
+      { id: "va_other", label: "Rest of Virginia", adj: 1 },
+    ]
+  },
+  { id: "wa", label: "Washington", adj: 0,
+    note: "WA requires full minimum wage for tipped workers, contributing to lower average tip percentages.",
+    cities: [
+      { id: "wa_seattle", label: "Seattle", adj: 0, note: "Workers benefit from Seattle's high minimum wage ($19+/hr). Tips still standard but less pressure than tip-credit states." },
+      { id: "wa_spokane", label: "Spokane", adj: -1 },
+      { id: "wa_other", label: "Rest of Washington", adj: 0 },
+    ]
+  },
+  { id: "wv", label: "West Virginia", adj: 3, note: "Tip credit state — workers highly dependent on tips. Strong community tipping culture.", cities: [] },
+  { id: "wi", label: "Wisconsin", adj: 2, cities: [] },
+  { id: "wy", label: "Wyoming", adj: 2, cities: [] },
+  { id: "dc", label: "Washington D.C.", adj: 2, note: "Affluent diner base and professional service industry. 20% is the baseline.", cities: [] },
 ];
 
 // Returns the effective adjustment for a given state + optional city selection.
@@ -182,183 +270,104 @@ export function getLocationNote(stateId, cityId) {
 // All values are mid-point of each country's range minus the US 18% base.
 // e.g. UK "10%" → mid = 10 → adj = 10 - 18 = -8
 const COUNTRY_ADJUSTMENTS = {
+  // ---- NORTH AMERICA ----
+  "united states": 2, "usa": 2, "us": 2,
+  "canada": 0,
+  "mexico": -3, "méxico": -3,
 
-  // ── North America ─────────────────────────────────────────────────────────
-  "united states": 2,   "usa": 2,   "us": 2,                         // 20%
-  "canada": -0.5,                                                      // 15–20% → mid ~17.5%
-  "mexico": -3,         "méxico": -3,                                  // 15%
-  "cuba": -5.5,                                                        // 10–15% → mid ~12.5%
-  "bahamas": -0.5,                                                     // 15–20% → mid ~17.5%
-  "dominican republic": -0.5,                                          // 10–20% → mid ~15% → -3
-  "belize": -3,                                                        // 15%
-  "guatemala": -8,                                                     // 10%
-  "honduras": -5.5,                                                    // 10–15% → mid ~12.5%
-  "el salvador": -18,                                                  // No tip (service included)
-  "nicaragua": -8,                                                     // 10%
-  "costa rica": -8,                                                    // 10%
-  "panama": -8,                                                        // 10%
+  // ---- WESTERN EUROPE ----
+  "united kingdom": -6, "uk": -6, "great britain": -6, "england": -6, "scotland": -6, "wales": -6,
+  "ireland": -6,
+  "france": -13,
+  "germany": -10, "deutschland": -10,
+  "italy": -11, "italia": -11,
+  "spain": -11, "españa": -11,
+  "portugal": -12,
+  "netherlands": -10, "holland": -10,
+  "belgium": -10,
+  "switzerland": -13,
+  "austria": -10,
+  "luxembourg": -10,
 
-  // ── Caribbean ─────────────────────────────────────────────────────────────
-  "antigua and barbuda": -5.5,                                         // 10–15%
-  "dominica": -8,                                                      // 10%
-  "saint kitts and nevis": -18,                                        // Service included
-  "saint lucia": -8,                                                   // 10%
-  "barbados": -8,                                                      // 10%
-  "grenada": -8,                                                       // 10%
-  "trinidad and tobago": -18,                                          // Service included
-  "saint vincent and the grenadines": -5.5,                            // 10–15%
-  "jamaica": -5.5,                                                     // 10–18% → mid ~14%
+  // ---- SCANDINAVIA ----
+  "sweden": -13, "sverige": -13,
+  "norway": -13, "norge": -13,
+  "denmark": -13, "danmark": -13,
+  "finland": -13, "suomi": -13,
+  "iceland": -13,
 
-  // ── South America ─────────────────────────────────────────────────────────
-  "colombia": -8,                                                      // 10%
-  "venezuela": -10.5,                                                  // 5–10% → mid ~7.5%
-  "guyana": -5.5,                                                      // 10–15%
-  "ecuador": -18,                                                      // Service included
-  "peru": -8,                                                          // 10%
-  "bolivia": -8,                                                       // 10%
-  "brazil": -8,                                                        // 10%
-  "paraguay": -8,                                                      // 10%
-  "uruguay": -5.5,                                                     // 10–15%
-  "argentina": -5.5,                                                   // 10–15%
-  "chile": -8,                                                         // 10%
+  // ---- SOUTHERN / EASTERN EUROPE ----
+  "greece": -8, "hellas": -8,
+  "czech republic": -8, "czechia": -8,
+  "poland": -6, "polska": -6,
+  "hungary": -8,
+  "romania": -8,
+  "bulgaria": -8,
+  "croatia": -8,
+  "serbia": -8,
+  "russia": -8, "russian federation": -8,
+  "ukraine": -8,
+  "slovakia": -8,
 
-  // ── Europe ────────────────────────────────────────────────────────────────
-  "united kingdom": -8, "uk": -8, "england": -8, "britain": -8,       // 10%
-  "ireland": -8,        "ireland (republic of)": -8,                   // 10%
-  "france": -8,                                                        // 10%
-  "spain": -8,                                                         // 10%
-  "portugal": -8,                                                      // 10%
-  "luxembourg": -18,                                                   // Service included
-  "belgium": -10.5,                                                    // 5–10% (service often included)
-  "netherlands": -10.5, "holland": -10.5,                              // 5–10%
-  "germany": -10.5,                                                    // 5–10%
-  "switzerland": -10.5,                                                // 5–10%
-  "liechtenstein": -10.5,                                              // 5–10%
-  "austria": -10.5,                                                    // 5–15% → mid ~10%
-  "denmark": -10.5,                                                    // 5–10%
-  "sweden": -18,                                                       // No tip expected
-  "norway": -10.5,                                                     // 5–10% (rare)
-  "finland": -18,                                                      // No tip expected
-  "iceland": -8,                                                       // 10%
-  "italy": -8,                                                         // 10%
-  "san marino": -5.5,                                                  // 5–15% → mid ~10%
-  "monaco": -5.5,                                                      // 5–10%
-  "andorra": -10.5,                                                    // 5–10%
-  "greece": -8,                                                        // 10%
-  "malta": -8,                                                         // 10%
-  "croatia": -8,                                                       // 10%
-  "slovenia": -8,                                                      // 10%
-  "bosnia and herzegovina": -8,                                        // 10%
-  "bosnia": -8,
-  "montenegro": -8,                                                    // 10%
-  "albania": -8,                                                       // 10%
-  "north macedonia": -8,  "macedonia": -8,                             // 10%
-  "serbia": -5.5,                                                      // 10–20% → mid ~15%
-  "kosovo": -8,                                                        // 10%
-  "bulgaria": -8,                                                      // 10%
-  "romania": -8,                                                       // 10%
-  "hungary": -8,                                                       // 10%
-  "slovakia": -8,                                                      // 10%
-  "czech republic": -8, "czechia": -8,                                 // 10%
-  "poland": -5.5,                                                      // 10–15%
-  "ukraine": -8,                                                       // 10%
-  "moldova": -8,                                                       // 10%
-  "belarus": -10.5,                                                    // 5–10%
-  "estonia": -8,                                                       // 10%
-  "latvia": -8,                                                        // 10%
-  "lithuania": -5.5,                                                   // 5–15% → mid ~10%
-  "russia": -5.5,                                                      // 10–15%
-  "cyprus": -8,                                                        // 10%
+  // ---- EAST ASIA (no-tip cultures) ----
+  "japan": -25, "nippon": -25,
+  "south korea": -25, "korea": -25,
+  "china": -25, "prc": -25,
 
-  // ── Middle East ───────────────────────────────────────────────────────────
-  "uae": -3.5,  "united arab emirates": -3.5,  "dubai": -3.5,         // 10–15%
-  "oman": -8,                                                          // 10%
-  "qatar": -3.5,                                                       // 10–15%
-  "bahrain": -8,                                                       // 10%
-  "kuwait": -5.5,                                                      // 10–15%
-  "saudi arabia": -5.5,                                                // 10–15%
-  "israel": -8,                                                        // 12% (Palestine 12%)
-  "palestine": -8,                                                     // 12%
-  "jordan": -10.5,                                                     // 5–10%
-  "lebanon": -8,                                                       // 12%
-  "turkey": -8,                                                        // 10%
-  "iran": -18,                                                         // No tip (not shown)
-  "iraq": -18,
+  // ---- SOUTHEAST ASIA ----
+  "thailand": -8,
+  "vietnam": -10, "viet nam": -10,
+  "indonesia": -8, "bali": -8,
+  "singapore": -13,
+  "malaysia": -10,
+  "philippines": -8,
+  "taiwan": -13,
+  "hong kong": -8,
 
-  // ── Africa ────────────────────────────────────────────────────────────────
-  "egypt": -8,                                                         // 10%
-  "tunisia": -8,                                                       // 10%
-  "morocco": -8,                                                       // 10%
-  "algeria": -5.5,                                                     // 10–15%
-  "mauritania": -5.5,                                                  // 12–15%
-  "senegal": -8,                                                       // 10%
-  "the gambia": -10.5,                                                 // 7.5% → mid ~7.5%
-  "gambia": -10.5,
-  "cape verde": -10.5,                                                 // 5–10%
-  "mali": -8,                                                          // 10%
-  "niger": -8,
-  "nigeria": -8,                                                       // 10%
-  "ghana": -10.5,                                                      // 5–10%
-  "côte d'ivoire": -8, "ivory coast": -8, "cote d'ivoire": -8,        // 10%
-  "cameroon": -5.5,                                                    // 10–15%
-  "equatorial guinea": -8,                                             // 10%
-  "gabon": -8,                                                         // 10%
-  "angola": -8,                                                        // 10%
-  "congo": -8,   "republic of the congo": -8,  "drc": -8,             // 10%
-  "namibia": -8,                                                       // 10%
-  "botswana": -8,                                                      // 10%
-  "south africa": -8,                                                  // 10%
-  "ethiopia": -10.5,                                                   // 5–10%
-  "kenya": -8,                                                         // 10%
-  "tanzania": -8,                                                      // 10%
-  "seychelles": -8,                                                    // 10%
-  "madagascar": -10.5,                                                 // 5–10%
-  "zimbabwe": -8,                                                      // 10%
-  "eswatini": -8,  "swaziland": -8,                                   // 10%
-  "mauritius": -5.5,                                                   // 10–15%
-  "djibouti": -18,                                                     // No tip
-  "eritrea": -18,
+  // ---- SOUTH ASIA ----
+  "india": -8,
+  "sri lanka": -8,
+  "nepal": -8,
 
-  // ── South & Central Asia ──────────────────────────────────────────────────
-  "india": -11,                                                        // 7–10% → mid ~8.5%
-  "nepal": -8,                                                         // 10%
-  "bhutan": -18,                                                       // No tipping custom
-  "sri lanka": -8,                                                     // 10%
-  "bangladesh": -13.5,                                                 // 2–10% → mid ~6%
-  "maldives": -5.5,                                                    // 10–15%
-  "pakistan": -18,                                                     // No tipping norm
-  "afghanistan": -18,
-  "uzbekistan": -18,  "tajikistan": -18,  "turkmenistan": -10.5,       // 5–10%
-  "kazakhstan": -18,
-  "georgia": -5.5,                                                     // 10–20%
-  "armenia": -8,                                                       // 10–20%
-  "azerbaijan": -18,                                                   // No tip common
+  // ---- MIDDLE EAST ----
+  "uae": -3, "united arab emirates": -3, "dubai": -3, "abu dhabi": -3,
+  "israel": -5,
+  "turkey": -10, "türkiye": -10,
+  "egypt": -6,
+  "jordan": -8,
+  "saudi arabia": -8,
+  "qatar": -3,
+  "bahrain": -3,
 
-  // ── East & Southeast Asia ─────────────────────────────────────────────────
-  "china": -18,                                                        // No tip (can be rude)
-  "mongolia": -8,                                                      // 10%
-  "japan": -18,                                                        // No tipping — considered rude
-  "south korea": -18,  "korea": -18,                                   // No tipping
-  "taiwan": -18,                                                       // No tipping
-  "thailand": -8,                                                      // 10%
-  "myanmar": -8,                                                       // 10%
-  "laos": -18,
-  "cambodia": -18,                                                     // No tip norm shown
-  "vietnam": -10.5,                                                    // 5–10%
-  "malaysia": -18,                                                     // Service charge included
-  "singapore": -18,                                                    // Service charge included (10% auto-added)
-  "indonesia": -10.5,                                                  // 5–10%
-  "philippines": -8,                                                   // 10%
-  "hong kong": -18,                                                    // Service charge included
-  "brunei": -18,
+  // ---- AFRICA ----
+  "south africa": -5,
+  "morocco": -8,
+  "kenya": -8,
+  "nigeria": -8,
+  "tanzania": -8,
+  "ghana": -8,
+  "ethiopia": -8,
 
-  // ── Oceania ───────────────────────────────────────────────────────────────
-  "australia": -18,                                                    // No standard tipping
-  "new zealand": -18,                                                  // No standard tipping
-  "fiji": -18,
-  "samoa": -18,
-  "vanuatu": -8,                                                       // 10%
-  "marshall islands": -10.5,                                           // 5–10%
+  // ---- OCEANIA ----
+  "australia": -8,
+  "new zealand": -10,
+
+  // ---- LATIN AMERICA ----
+  "brazil": -8, "brasil": -8,
+  "argentina": -8,
+  "colombia": -8,
+  "peru": -8,
+  "chile": -8,
+  "ecuador": -8,
+  "venezuela": -8,
+  "bolivia": -8,
+  "paraguay": -8,
+  "uruguay": -8,
+  "costa rica": -8,
+  "panama": -5,
+  "cuba": -8,
+  "dominican republic": -5,
+  "puerto rico": 0,
 };
 
 export function getCountryAdj(country) {
