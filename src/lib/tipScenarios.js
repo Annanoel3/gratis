@@ -161,7 +161,11 @@ export const CATEGORIES = [
   "Other",
 ];
 
-export function computeTip({ scenario, bill, rating, mode, customPercent, people = 1, venueTier = "mid", budgetMult = 1, locationAdj = 0 }) {
+// locationAdj meaning:
+//   US mode  → additive % points nudge on top of the scenario base (e.g. NYC +3)
+//   Intl mode → pass isIntl=true; locationAdj is then used as the ABSOLUTE base %
+//               (e.g. UK = 10, Japan = 0), replacing the US-centric scenario base.
+export function computeTip({ scenario, bill, rating, mode, customPercent, people = 1, venueTier = "mid", budgetMult = 1, locationAdj = 0, isIntl = false }) {
   if (!scenario || !bill || bill <= 0) {
     return { tipAmount: 0, totalAmount: 0, perPerson: 0, effectivePercent: 0, isFlat: false };
   }
@@ -182,13 +186,22 @@ export function computeTip({ scenario, bill, rating, mode, customPercent, people
     const combinedMult = ratingMult * tierMult;
 
     if (scenario.type === "flat") {
-      tipAmount = scenario.base * combinedMult * budgetMult;
+      // For flat tips in international mode, scale by the intl norm ratio
+      const intlScale = isIntl ? Math.max(0, locationAdj) / 18 : 1;
+      const scale = isIntl ? intlScale : budgetMult;
+      tipAmount = scenario.base * combinedMult * (isIntl ? Math.max(0.1, intlScale) : budgetMult);
       isFlat = true;
       effectivePercent = (tipAmount / bill) * 100;
     } else {
-      const pct = (scenario.base * combinedMult * budgetMult) + locationAdj;
-      tipAmount = (bill * pct) / 100;
-      effectivePercent = pct;
+      let basePct;
+      if (isIntl) {
+        // Use the country's norm as the base; rating still adjusts proportionally
+        basePct = Math.max(0, locationAdj) * combinedMult * budgetMult;
+      } else {
+        basePct = (scenario.base * combinedMult * budgetMult) + locationAdj;
+      }
+      tipAmount = (bill * basePct) / 100;
+      effectivePercent = basePct;
     }
   }
 

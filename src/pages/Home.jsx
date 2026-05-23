@@ -74,8 +74,9 @@ export default function Home() {
         venueTier,
         budgetMult,
         locationAdj,
+        isIntl: notInUS,
       }),
-    [scenario, billNum, rating, mode, customPercent, people, venueTier, budgetMult, locationAdj]
+    [scenario, billNum, rating, mode, customPercent, people, venueTier, budgetMult, locationAdj, notInUS]
   );
 
   const showResult = !notInUS && billNum > 0 && (mode === "custom" || scenario);

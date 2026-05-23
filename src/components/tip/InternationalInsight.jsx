@@ -41,9 +41,9 @@ Also provide a typical_tip_percent: the single most common tip percentage for a 
       });
       setInsight(res);
       setLoading(false);
-      // Pass the AI-researched tip percent back up so the calculator can use it
+      // Pass the AI-researched absolute tip % back up so the calculator uses it directly
       if (onTipAdjOverride && typeof res.typical_tip_percent === "number") {
-        onTipAdjOverride(res.typical_tip_percent - 18); // convert to adj relative to 18% base
+        onTipAdjOverride(res.typical_tip_percent);
       }
     }, 800);
 
