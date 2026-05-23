@@ -11,6 +11,7 @@ import InternationalInsight from "@/components/tip/InternationalInsight";
 import CurrencyToggle, { getCurrencyForCountry } from "@/components/tip/CurrencyToggle";
 
 import { computeTip } from "@/lib/tipScenarios";
+import MoversCalculator from "@/components/tip/MoversCalculator";
 import { useSettings, BUDGET_MODE_MULT, getLocationAdj, getLocationLabel, getCountryAdj } from "@/lib/SettingsContext";
 
 export default function Home() {
@@ -20,7 +21,7 @@ export default function Home() {
   const [rating, setRating] = useState(3);
   const [mode, setMode] = useState("rating"); // "rating" | "custom"
   const [customPercent, setCustomPercent] = useState(18);
-  const [venueTier, setVenueTier] = useState("mid");
+  const [venueTier, setVenueTier] = useState("everyday");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [intlCalculatorOpen, setIntlCalculatorOpen] = useState(false);
   const [useLocalCurrency, setUseLocalCurrency] = useState(false);
@@ -74,7 +75,10 @@ export default function Home() {
     [scenario, billNum, rating, mode, customPercent, people, venueTier, budgetMult, locationAdj]
   );
 
-  const showResult = !notInUS && billNum > 0 && (mode === "custom" || scenario);
+  const isMovers = scenario?.type === "movers";
+  const isFlat = scenario?.type === "flat";
+  const needsBill = !isMovers && scenario?.type !== "flat";
+  const showResult = !notInUS && !isMovers && (billNum > 0 || isFlat) && (mode === "custom" || scenario);
 
   const handleRefresh = () => {
     setScenario(null);
@@ -83,7 +87,7 @@ export default function Home() {
     setRating(3);
     setMode("rating");
     setCustomPercent(18);
-    setVenueTier("mid");
+    setVenueTier("everyday");
     return new Promise((r) => setTimeout(r, 600));
   };
 
@@ -192,24 +196,36 @@ export default function Home() {
           <>
             {/* Card */}
             <div ref={calcRef} className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
-              <BillInput bill={bill} setBill={setBill} people={people} setPeople={setPeople} />
+              {needsBill && <BillInput bill={bill} setBill={setBill} people={people} setPeople={setPeople} />}
               <SituationSelect selected={scenario} onSelect={setScenario} locationAdj={locationAdj} />
-              <ModeToggle mode={mode} setMode={setMode} customPercent={customPercent} setCustomPercent={setCustomPercent} />
-              {mode === "rating" && scenario?.venueAware && (
+              {!isMovers && (
+                <ModeToggle mode={mode} setMode={setMode} customPercent={customPercent} setCustomPercent={setCustomPercent} />
+              )}
+              {!isMovers && mode === "rating" && scenario?.venueAware && (
                 <VenueTier venueTier={venueTier} setVenueTier={setVenueTier} />
               )}
-              {mode === "rating" && scenario && (
+              {!isMovers && mode === "rating" && scenario && (
                 <ServiceRating rating={rating} setRating={setRating} />
               )}
             </div>
 
             {/* Result */}
             <div className="mt-3">
-              {showResult ? (
+              {isMovers && scenario ? (
+                <MoversCalculator scenario={scenario} />
+              ) : showResult ? (
                 <TipDisplay result={result} scenario={scenario} people={people} />
+              ) : scenario ? (
+                isFlat ? (
+                  <TipDisplay result={result} scenario={scenario} people={people} />
+                ) : (
+                  <div className="text-center text-sm text-muted-foreground py-2">
+                    Enter a bill amount to see your tip.
+                  </div>
+                )
               ) : (
                 <div className="text-center text-sm text-muted-foreground py-2">
-                  Enter a bill amount{mode === "rating" && " and pick a situation"} to see your tip.
+                  Pick a service{needsBill ? " and enter a bill amount" : ""} to see your tip.
                 </div>
               )}
             </div>

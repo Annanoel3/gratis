@@ -7,7 +7,7 @@ export default function VenueTier({ venueTier, setVenueTier }) {
       <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground font-medium">
         Venue / Setting
       </span>
-      <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-2">
         {VENUE_TIERS.map((tier) => {
           const active = venueTier === tier.id;
           return (

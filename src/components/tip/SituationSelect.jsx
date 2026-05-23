@@ -150,8 +150,12 @@ export default function SituationSelect({ selected, onSelect, locationAdj = 0 })
                           </div>
                           <div className="text-xs text-muted-foreground mt-0.5">
                             {s.type === "flat"
-                              ? `$${s.min}–$${s.max} typical`
-                              : `${Math.max(0, s.min + locationAdj)}–${Math.max(0, s.max + locationAdj)}% typical`}
+                              ? `$${s.flatMin}–$${s.flatMax} typical`
+                              : s.type === "movers"
+                              ? "Calculated by crew & hours"
+                              : s.type === "hybrid_delivery"
+                              ? `${s.base}% or $${s.hybridMin} min`
+                              : `${s.base}% base`}
                           </div>
                         </div>
                         {selected?.id === s.id && <Check className="w-4 h-4 text-accent shrink-0" />}
