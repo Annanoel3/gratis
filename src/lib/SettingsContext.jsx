@@ -12,66 +12,66 @@ export const STATES = [
 
   // States with significant city-level variation
   {
-    id: "ny", label: "New York", adj: 1,
+    id: "ny", label: "New York", adj: -0.7,  // 18.7% avg
     cities: [
       { id: "ny_nyc",     label: "New York City",    adj: 2.5, note: "20%+ is widely considered the floor here" },
-      { id: "ny_buffalo", label: "Buffalo",          adj: 0 },
-      { id: "ny_albany",  label: "Albany",           adj: 0 },
-      { id: "ny_other",   label: "Rest of New York", adj: 0.5 },
+      { id: "ny_buffalo", label: "Buffalo",          adj: -0.5 },
+      { id: "ny_albany",  label: "Albany",           adj: -0.5 },
+      { id: "ny_other",   label: "Rest of New York", adj: -0.5 },
     ],
   },
   {
-    id: "ca", label: "California", adj: 1,
+    id: "ca", label: "California", adj: -2.1,  // 17.3% avg — lowest in the nation
     cities: [
-      { id: "ca_sf",   label: "San Francisco / Bay Area", adj: 2,   note: "20% is the standard expectation" },
-      { id: "ca_la",   label: "Los Angeles",              adj: 1.5 },
-      { id: "ca_sd",   label: "San Diego",                adj: 1 },
-      { id: "ca_sac",  label: "Sacramento",               adj: 0.5 },
-      { id: "ca_other",label: "Rest of California",       adj: 0.5 },
+      { id: "ca_sf",   label: "San Francisco / Bay Area", adj: 0,    note: "20% is the standard expectation" },
+      { id: "ca_la",   label: "Los Angeles",              adj: -0.5 },
+      { id: "ca_sd",   label: "San Diego",                adj: -1 },
+      { id: "ca_sac",  label: "Sacramento",               adj: -1.5 },
+      { id: "ca_other",label: "Rest of California",       adj: -2 },
     ],
   },
   {
-    id: "tx", label: "Texas", adj: -0.5,
+    id: "tx", label: "Texas", adj: -0.7,  // 18.7% avg
     cities: [
-      { id: "tx_austin",  label: "Austin",          adj: 0.5, note: "Tech-boom city; 18–20% is common" },
-      { id: "tx_dallas",  label: "Dallas / Fort Worth", adj: 0 },
-      { id: "tx_houston", label: "Houston",         adj: 0 },
-      { id: "tx_sa",      label: "San Antonio",     adj: -0.5 },
-      { id: "tx_other",   label: "Rest of Texas",   adj: -1,  note: "15% is the most common baseline" },
+      { id: "tx_austin",  label: "Austin",              adj: 1.5,  note: "Vibrant food scene; 20–25% is common for great service" },
+      { id: "tx_dallas",  label: "Dallas / Fort Worth", adj: -0.5 },
+      { id: "tx_houston", label: "Houston",             adj: -0.5 },
+      { id: "tx_sa",      label: "San Antonio",         adj: -1 },
+      { id: "tx_other",   label: "Rest of Texas",       adj: -1.5, note: "15% is the most common baseline" },
     ],
   },
   {
-    id: "il", label: "Illinois", adj: 0,
+    id: "il", label: "Illinois", adj: -0.4,  // 19.0% avg
     cities: [
       { id: "il_chicago", label: "Chicago",          adj: 1.5, note: "18–20% is the norm in the city" },
-      { id: "il_other",   label: "Rest of Illinois", adj: -0.5 },
+      { id: "il_other",   label: "Rest of Illinois", adj: -1 },
     ],
   },
   {
-    id: "fl", label: "Florida", adj: 0,
+    id: "fl", label: "Florida", adj: -1.2,  // 18.2% avg
     cities: [
-      { id: "fl_miami",   label: "Miami",            adj: 1 },
-      { id: "fl_orlando", label: "Orlando",          adj: 0 },
-      { id: "fl_tampa",   label: "Tampa",            adj: 0 },
-      { id: "fl_other",   label: "Rest of Florida",  adj: -0.5 },
+      { id: "fl_miami",   label: "Miami",            adj: 0.5 },
+      { id: "fl_orlando", label: "Orlando",          adj: -1 },
+      { id: "fl_tampa",   label: "Tampa",            adj: -1 },
+      { id: "fl_other",   label: "Rest of Florida",  adj: -1.5 },
     ],
   },
   {
-    id: "ma", label: "Massachusetts", adj: 1,
+    id: "ma", label: "Massachusetts", adj: -0.1,  // 19.3% avg
     cities: [
-      { id: "ma_boston", label: "Boston",                    adj: 1.5 },
-      { id: "ma_other",  label: "Rest of Massachusetts",     adj: 0.5 },
+      { id: "ma_boston", label: "Boston",                adj: 1 },
+      { id: "ma_other",  label: "Rest of Massachusetts", adj: -0.5 },
     ],
   },
   {
-    id: "wa", label: "Washington", adj: 0.5,
+    id: "wa", label: "Washington", adj: -1.6,  // 17.8% avg
     cities: [
-      { id: "wa_seattle", label: "Seattle",            adj: 1.5, note: "High COL; 18–20% expected" },
-      { id: "wa_other",   label: "Rest of Washington", adj: 0 },
+      { id: "wa_seattle", label: "Seattle",            adj: 0.5, note: "High COL; 18–20% expected" },
+      { id: "wa_other",   label: "Rest of Washington", adj: -2 },
     ],
   },
   {
-    id: "co", label: "Colorado", adj: 0,
+    id: "co", label: "Colorado", adj: 0.1,  // 19.5% avg
     cities: [
       { id: "co_denver", label: "Denver / Boulder", adj: 0.5 },
       { id: "co_other",  label: "Rest of Colorado", adj: -0.5 },
@@ -79,48 +79,48 @@ export const STATES = [
   },
 
   // States where tips are fairly uniform — no city drill-down needed
-  { id: "ak", label: "Alaska",        adj: 1,    note: "Higher COL; 18–20% is standard" },
-  { id: "az", label: "Arizona",       adj: -0.5, cities: [] },
-  { id: "ar", label: "Arkansas",      adj: -1.5, note: "15% is generous here" },
-  { id: "ct", label: "Connecticut",   adj: 1 },
-  { id: "dc", label: "Washington D.C.", adj: 1.5 },
-  { id: "de", label: "Delaware",      adj: 0 },
-  { id: "ga", label: "Georgia",       adj: -0.5 },
-  { id: "hi", label: "Hawaii",        adj: 1.5,  note: "Very high COL; 20% is the norm" },
-  { id: "id", label: "Idaho",         adj: -1 },
-  { id: "in", label: "Indiana",       adj: -1 },
-  { id: "ia", label: "Iowa",          adj: -1.5, note: "15% is generous here" },
-  { id: "ks", label: "Kansas",        adj: -1 },
-  { id: "ky", label: "Kentucky",      adj: -1 },
-  { id: "la", label: "Louisiana",     adj: -0.5 },
-  { id: "me", label: "Maine",         adj: 0 },
-  { id: "md", label: "Maryland",      adj: 0.5 },
-  { id: "mi", label: "Michigan",      adj: -0.5 },
-  { id: "mn", label: "Minnesota",     adj: -0.5 },
-  { id: "ms", label: "Mississippi",   adj: -1.5, note: "15% is generous here" },
-  { id: "mo", label: "Missouri",      adj: -1 },
-  { id: "mt", label: "Montana",       adj: -1 },
-  { id: "ne", label: "Nebraska",      adj: -1 },
-  { id: "nv", label: "Nevada",        adj: 0.5 },
-  { id: "nh", label: "New Hampshire", adj: 0 },
-  { id: "nj", label: "New Jersey",    adj: 1 },
-  { id: "nm", label: "New Mexico",    adj: -1 },
-  { id: "nc", label: "North Carolina", adj: -0.5 },
-  { id: "nd", label: "North Dakota",  adj: -1.5 },
-  { id: "oh", label: "Ohio",          adj: -0.5 },
-  { id: "ok", label: "Oklahoma",      adj: -1 },
-  { id: "or", label: "Oregon",        adj: 0.5 },
-  { id: "pa", label: "Pennsylvania",  adj: 0 },
-  { id: "ri", label: "Rhode Island",  adj: 0.5 },
-  { id: "sc", label: "South Carolina", adj: -1 },
-  { id: "sd", label: "South Dakota",  adj: -1.5 },
-  { id: "tn", label: "Tennessee",     adj: -0.5 },
-  { id: "ut", label: "Utah",          adj: -0.5 },
-  { id: "vt", label: "Vermont",       adj: 0 },
-  { id: "va", label: "Virginia",      adj: 0 },
-  { id: "wv", label: "West Virginia", adj: -1.5 },
-  { id: "wi", label: "Wisconsin",     adj: -1 },
-  { id: "wy", label: "Wyoming",       adj: -1 },
+  { id: "ak", label: "Alaska",          adj: -0.6  },                                         // 18.8%
+  { id: "az", label: "Arizona",         adj: -0.3, cities: [] },                              // 19.1%
+  { id: "ar", label: "Arkansas",        adj: -0.9, note: "15–18% is the norm here" },         // 18.5%
+  { id: "ct", label: "Connecticut",     adj: -0.3 },                                          // 19.1%
+  { id: "dc", label: "Washington D.C.", adj: 1.5  },                                          // high COL, above avg
+  { id: "de", label: "Delaware",        adj: 2.1,  note: "Highest average tipping state at 21.5%" }, // 21.5%
+  { id: "ga", label: "Georgia",         adj: -0.6 },                                          // 18.8%
+  { id: "hi", label: "Hawaii",          adj: -0.9, note: "18–19% is typical; tipping norms are relaxed here" }, // 18.5%
+  { id: "id", label: "Idaho",           adj: 0.1  },                                          // 19.5%
+  { id: "in", label: "Indiana",         adj: 1.0,  note: "Indiana tips well at ~20.4% average" }, // 20.4%
+  { id: "ia", label: "Iowa",            adj: 0.4  },                                          // 19.8%
+  { id: "ks", label: "Kansas",          adj: 0.4  },                                          // 19.8%
+  { id: "ky", label: "Kentucky",        adj: 0.9,  note: "Kentucky averages ~20.3% — tip well" }, // 20.3%
+  { id: "la", label: "Louisiana",       adj: -1.0 },                                          // 18.4%
+  { id: "me", label: "Maine",           adj: 0.3  },                                          // 19.7%
+  { id: "md", label: "Maryland",        adj: -0.1 },                                          // 19.3%
+  { id: "mi", label: "Michigan",        adj: 0.5  },                                          // 19.9%
+  { id: "mn", label: "Minnesota",       adj: -0.4 },                                          // 19.0%
+  { id: "ms", label: "Mississippi",     adj: -0.7, note: "15–18% is the norm here" },         // 18.7%
+  { id: "mo", label: "Missouri",        adj: 0.5  },                                          // 19.9%
+  { id: "mt", label: "Montana",         adj: 0.5  },                                          // 19.9%
+  { id: "ne", label: "Nebraska",        adj: 0.3  },                                          // 19.7%
+  { id: "nv", label: "Nevada",          adj: -1.3 },                                          // 18.1%
+  { id: "nh", label: "New Hampshire",   adj: 1.0,  note: "NH averages ~20.4% — tip generously" }, // 20.4%
+  { id: "nj", label: "New Jersey",      adj: -0.7 },                                          // 18.7%
+  { id: "nm", label: "New Mexico",      adj: -0.5 },                                          // 18.9%
+  { id: "nc", label: "North Carolina",  adj: 0.0  },                                          // 19.4%
+  { id: "nd", label: "North Dakota",    adj: -0.1 },                                          // 19.3%
+  { id: "oh", label: "Ohio",            adj: 0.9  },                                          // 20.3%
+  { id: "ok", label: "Oklahoma",        adj: -0.4 },                                          // 19.0%
+  { id: "or", label: "Oregon",          adj: -0.4 },                                          // 19.0%
+  { id: "pa", label: "Pennsylvania",    adj: 0.4  },                                          // 19.8%
+  { id: "ri", label: "Rhode Island",    adj: 0.6  },                                          // 20.0%
+  { id: "sc", label: "South Carolina",  adj: 0.6  },                                          // 20.0%
+  { id: "sd", label: "South Dakota",    adj: 0.0  },                                          // 19.4%
+  { id: "tn", label: "Tennessee",       adj: -0.2 },                                          // 19.2%
+  { id: "ut", label: "Utah",            adj: -0.7 },                                          // 18.7%
+  { id: "vt", label: "Vermont",         adj: 0.0  },                                          // 19.4%
+  { id: "va", label: "Virginia",        adj: -0.3 },                                          // 19.1%
+  { id: "wv", label: "West Virginia",   adj: 1.1,  note: "WV averages ~20.5% — one of the highest in the US" }, // 20.5%
+  { id: "wi", label: "Wisconsin",       adj: 0.6  },                                          // 20.0%
+  { id: "wy", label: "Wyoming",         adj: 0.9  },                                          // 20.3%
 ];
 
 // Returns the effective adjustment for a given state + optional city selection.
