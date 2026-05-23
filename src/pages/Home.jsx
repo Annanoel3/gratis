@@ -24,6 +24,7 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [intlCalculatorOpen, setIntlCalculatorOpen] = useState(false);
   const [useLocalCurrency, setUseLocalCurrency] = useState(false);
+  const [aiTipAdjOverride, setAiTipAdjOverride] = useState(null);
 
   const { budgetMode, stateId, cityId, notInUS, country } = useSettings();
   const calcRef = useRef(null);
@@ -33,6 +34,7 @@ export default function Home() {
   useEffect(() => {
     setIntlCalculatorOpen(false);
     setUseLocalCurrency(false);
+    setAiTipAdjOverride(null);
   }, [country]);
 
   // Auto-scroll to calculator on first user scroll (resets on every page visit)
@@ -54,7 +56,9 @@ export default function Home() {
   }, []);
 
   const billNum = parseFloat(bill) || 0;
-  const locationAdj = notInUS ? 0 : getLocationAdj(stateId, cityId);
+  const locationAdj = notInUS
+    ? (aiTipAdjOverride !== null ? aiTipAdjOverride : getCountryAdj(country))
+    : getLocationAdj(stateId, cityId);
   const budgetMult = budgetMode ? BUDGET_MODE_MULT : 1;
   const locationLabel = getLocationLabel(stateId, cityId);
 
@@ -148,6 +152,7 @@ export default function Home() {
                 <InternationalInsight
                   country={country}
                   onReadyToCalculate={() => setIntlCalculatorOpen(true)}
+                  onTipAdjOverride={setAiTipAdjOverride}
                 />
                 {intlCalculatorOpen && (
                   <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-7 shadow-sm">
