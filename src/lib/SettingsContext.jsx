@@ -310,9 +310,9 @@ const COUNTRY_ADJUSTMENTS = {
   "slovakia": -8,
 
   // ---- EAST ASIA (no-tip cultures) ----
-  "japan": -25, "nippon": -25,
-  "south korea": -25, "korea": -25,
-  "china": -25, "prc": -25,
+  "japan": -100, "nippon": -100,
+  "south korea": -100, "korea": -100,
+  "china": -100, "prc": -100,
 
   // ---- SOUTHEAST ASIA ----
   "thailand": -8,
@@ -436,4 +436,13 @@ export function SettingsProvider({ children }) {
 
 export function useSettings() {
   return useContext(SettingsContext);
+}
+
+export const NO_TIP_COUNTRIES = new Set([
+  'japan', 'nippon', 'south korea', 'korea', 'china', 'prc', "people's republic of china",
+]);
+
+export function isNoTipCountry(country) {
+  if (!country) return false;
+  return NO_TIP_COUNTRIES.has(country.toLowerCase().trim());
 }

@@ -186,7 +186,7 @@ export function computeTip({ scenario, bill, rating, mode, customPercent, people
       isFlat = true;
       effectivePercent = (tipAmount / bill) * 100;
     } else {
-      const pct = (scenario.base * combinedMult * budgetMult) + locationAdj;
+      const pct = Math.max(0, (scenario.base * combinedMult * budgetMult) + locationAdj);
       tipAmount = (bill * pct) / 100;
       effectivePercent = pct;
     }
