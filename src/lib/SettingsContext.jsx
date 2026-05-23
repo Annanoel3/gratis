@@ -177,193 +177,194 @@ export function getLocationNote(stateId, cityId) {
   return state.note || null;
 }
 
-// Country tip norms — the absolute typical tip % for restaurants in each country.
-// Source: Hawaiian Islands / TripAdvisor infographic (162 countries).
-// 0 = no tipping, mid-point used for ranges (e.g. "10–15%" → 12.5)
-const COUNTRY_NORMS = {
+// Country-level tip adjustments (additive % points on the base).
+// Calibrated from the Hawaiian Islands infographic (TripAdvisor data, 162 countries).
+// All values are mid-point of each country's range minus the US 18% base.
+// e.g. UK "10%" → mid = 10 → adj = 10 - 18 = -8
+const COUNTRY_ADJUSTMENTS = {
 
   // ── North America ─────────────────────────────────────────────────────────
-  "united states": 20,  "usa": 20,  "us": 20,
-  "canada": 17.5,                                                      // 15–20%
-  "mexico": 15,
-  "cuba": 12.5,                                                        // 10–15%
-  "bahamas": 17.5,                                                     // 15–20%
-  "dominican republic": 15,                                            // 10–20%
-  "belize": 15,
-  "guatemala": 10,
-  "honduras": 12.5,                                                    // 10–15%
-  "el salvador": 0,                                                    // Service included
-  "nicaragua": 10,
-  "costa rica": 10,
-  "panama": 10,
+  "united states": 2,   "usa": 2,   "us": 2,                         // 20%
+  "canada": -0.5,                                                      // 15–20% → mid ~17.5%
+  "mexico": -3,         "méxico": -3,                                  // 15%
+  "cuba": -5.5,                                                        // 10–15% → mid ~12.5%
+  "bahamas": -0.5,                                                     // 15–20% → mid ~17.5%
+  "dominican republic": -0.5,                                          // 10–20% → mid ~15% → -3
+  "belize": -3,                                                        // 15%
+  "guatemala": -8,                                                     // 10%
+  "honduras": -5.5,                                                    // 10–15% → mid ~12.5%
+  "el salvador": -18,                                                  // No tip (service included)
+  "nicaragua": -8,                                                     // 10%
+  "costa rica": -8,                                                    // 10%
+  "panama": -8,                                                        // 10%
 
   // ── Caribbean ─────────────────────────────────────────────────────────────
-  "antigua and barbuda": 12.5,                                         // 10–15%
-  "dominica": 10,
-  "saint kitts and nevis": 0,                                          // Service included
-  "saint lucia": 10,
-  "barbados": 10,
-  "grenada": 10,
-  "trinidad and tobago": 0,                                            // Service included
-  "saint vincent and the grenadines": 12.5,                            // 10–15%
-  "jamaica": 14,                                                       // 10–18%
+  "antigua and barbuda": -5.5,                                         // 10–15%
+  "dominica": -8,                                                      // 10%
+  "saint kitts and nevis": -18,                                        // Service included
+  "saint lucia": -8,                                                   // 10%
+  "barbados": -8,                                                      // 10%
+  "grenada": -8,                                                       // 10%
+  "trinidad and tobago": -18,                                          // Service included
+  "saint vincent and the grenadines": -5.5,                            // 10–15%
+  "jamaica": -5.5,                                                     // 10–18% → mid ~14%
 
   // ── South America ─────────────────────────────────────────────────────────
-  "colombia": 10,
-  "venezuela": 7.5,                                                    // 5–10%
-  "guyana": 12.5,                                                      // 10–15%
-  "ecuador": 0,                                                        // Service included
-  "peru": 10,
-  "bolivia": 10,
-  "brazil": 10,
-  "paraguay": 10,
-  "uruguay": 12.5,                                                     // 10–15%
-  "argentina": 12.5,                                                   // 10–15%
-  "chile": 10,
+  "colombia": -8,                                                      // 10%
+  "venezuela": -10.5,                                                  // 5–10% → mid ~7.5%
+  "guyana": -5.5,                                                      // 10–15%
+  "ecuador": -18,                                                      // Service included
+  "peru": -8,                                                          // 10%
+  "bolivia": -8,                                                       // 10%
+  "brazil": -8,                                                        // 10%
+  "paraguay": -8,                                                      // 10%
+  "uruguay": -5.5,                                                     // 10–15%
+  "argentina": -5.5,                                                   // 10–15%
+  "chile": -8,                                                         // 10%
 
   // ── Europe ────────────────────────────────────────────────────────────────
-  "united kingdom": 10, "uk": 10, "england": 10, "britain": 10,
-  "ireland": 10,        "ireland (republic of)": 10,
-  "france": 10,
-  "spain": 10,
-  "portugal": 10,
-  "luxembourg": 0,                                                     // Service included
-  "belgium": 7.5,                                                      // 5–10%
-  "netherlands": 7.5,   "holland": 7.5,
-  "germany": 7.5,                                                      // 5–10%
-  "switzerland": 7.5,
-  "liechtenstein": 7.5,
-  "austria": 10,                                                       // 5–15%
-  "denmark": 7.5,                                                      // 5–10%
-  "sweden": 0,                                                         // Not expected
-  "norway": 7.5,
-  "finland": 0,                                                        // Not expected
-  "iceland": 10,
-  "italy": 10,
-  "san marino": 10,
-  "monaco": 7.5,
-  "andorra": 7.5,
-  "greece": 10,
-  "malta": 10,
-  "croatia": 10,
-  "slovenia": 10,
-  "bosnia and herzegovina": 10,  "bosnia": 10,
-  "montenegro": 10,
-  "albania": 10,
-  "north macedonia": 10,  "macedonia": 10,
-  "serbia": 15,                                                        // 10–20%
-  "kosovo": 10,
-  "bulgaria": 10,
-  "romania": 10,
-  "hungary": 10,
-  "slovakia": 10,
-  "czech republic": 10, "czechia": 10,
-  "poland": 12.5,                                                      // 10–15%
-  "ukraine": 10,
-  "moldova": 10,
-  "belarus": 7.5,                                                      // 5–10%
-  "estonia": 10,
-  "latvia": 10,
-  "lithuania": 10,
-  "russia": 12.5,                                                      // 10–15%
-  "cyprus": 10,
+  "united kingdom": -8, "uk": -8, "england": -8, "britain": -8,       // 10%
+  "ireland": -8,        "ireland (republic of)": -8,                   // 10%
+  "france": -8,                                                        // 10%
+  "spain": -8,                                                         // 10%
+  "portugal": -8,                                                      // 10%
+  "luxembourg": -18,                                                   // Service included
+  "belgium": -10.5,                                                    // 5–10% (service often included)
+  "netherlands": -10.5, "holland": -10.5,                              // 5–10%
+  "germany": -10.5,                                                    // 5–10%
+  "switzerland": -10.5,                                                // 5–10%
+  "liechtenstein": -10.5,                                              // 5–10%
+  "austria": -10.5,                                                    // 5–15% → mid ~10%
+  "denmark": -10.5,                                                    // 5–10%
+  "sweden": -18,                                                       // No tip expected
+  "norway": -10.5,                                                     // 5–10% (rare)
+  "finland": -18,                                                      // No tip expected
+  "iceland": -8,                                                       // 10%
+  "italy": -8,                                                         // 10%
+  "san marino": -5.5,                                                  // 5–15% → mid ~10%
+  "monaco": -5.5,                                                      // 5–10%
+  "andorra": -10.5,                                                    // 5–10%
+  "greece": -8,                                                        // 10%
+  "malta": -8,                                                         // 10%
+  "croatia": -8,                                                       // 10%
+  "slovenia": -8,                                                      // 10%
+  "bosnia and herzegovina": -8,                                        // 10%
+  "bosnia": -8,
+  "montenegro": -8,                                                    // 10%
+  "albania": -8,                                                       // 10%
+  "north macedonia": -8,  "macedonia": -8,                             // 10%
+  "serbia": -5.5,                                                      // 10–20% → mid ~15%
+  "kosovo": -8,                                                        // 10%
+  "bulgaria": -8,                                                      // 10%
+  "romania": -8,                                                       // 10%
+  "hungary": -8,                                                       // 10%
+  "slovakia": -8,                                                      // 10%
+  "czech republic": -8, "czechia": -8,                                 // 10%
+  "poland": -5.5,                                                      // 10–15%
+  "ukraine": -8,                                                       // 10%
+  "moldova": -8,                                                       // 10%
+  "belarus": -10.5,                                                    // 5–10%
+  "estonia": -8,                                                       // 10%
+  "latvia": -8,                                                        // 10%
+  "lithuania": -5.5,                                                   // 5–15% → mid ~10%
+  "russia": -5.5,                                                      // 10–15%
+  "cyprus": -8,                                                        // 10%
 
   // ── Middle East ───────────────────────────────────────────────────────────
-  "uae": 12.5,  "united arab emirates": 12.5,  "dubai": 12.5,         // 10–15%
-  "oman": 10,
-  "qatar": 12.5,                                                       // 10–15%
-  "bahrain": 10,
-  "kuwait": 12.5,                                                      // 10–15%
-  "saudi arabia": 12.5,                                                // 10–15%
-  "israel": 12,
-  "palestine": 12,
-  "jordan": 7.5,                                                       // 5–10%
-  "lebanon": 12,
-  "turkey": 10,
-  "iran": 0,
-  "iraq": 0,
+  "uae": -3.5,  "united arab emirates": -3.5,  "dubai": -3.5,         // 10–15%
+  "oman": -8,                                                          // 10%
+  "qatar": -3.5,                                                       // 10–15%
+  "bahrain": -8,                                                       // 10%
+  "kuwait": -5.5,                                                      // 10–15%
+  "saudi arabia": -5.5,                                                // 10–15%
+  "israel": -8,                                                        // 12% (Palestine 12%)
+  "palestine": -8,                                                     // 12%
+  "jordan": -10.5,                                                     // 5–10%
+  "lebanon": -8,                                                       // 12%
+  "turkey": -8,                                                        // 10%
+  "iran": -18,                                                         // No tip (not shown)
+  "iraq": -18,
 
   // ── Africa ────────────────────────────────────────────────────────────────
-  "egypt": 10,
-  "tunisia": 10,
-  "morocco": 10,
-  "algeria": 12.5,                                                     // 10–15%
-  "mauritania": 13.5,                                                  // 12–15%
-  "senegal": 10,
-  "the gambia": 7.5,   "gambia": 7.5,
-  "cape verde": 7.5,                                                   // 5–10%
-  "mali": 10,
-  "niger": 10,
-  "nigeria": 10,
-  "ghana": 7.5,                                                        // 5–10%
-  "côte d'ivoire": 10, "ivory coast": 10, "cote d'ivoire": 10,
-  "cameroon": 12.5,                                                    // 10–15%
-  "equatorial guinea": 10,
-  "gabon": 10,
-  "angola": 10,
-  "congo": 10,  "republic of the congo": 10,  "drc": 10,
-  "namibia": 10,
-  "botswana": 10,
-  "south africa": 10,
-  "ethiopia": 7.5,                                                     // 5–10%
-  "kenya": 10,
-  "tanzania": 10,
-  "seychelles": 10,
-  "madagascar": 7.5,                                                   // 5–10%
-  "zimbabwe": 10,
-  "eswatini": 10,  "swaziland": 10,
-  "mauritius": 12.5,                                                   // 10–15%
-  "djibouti": 0,
-  "eritrea": 0,
+  "egypt": -8,                                                         // 10%
+  "tunisia": -8,                                                       // 10%
+  "morocco": -8,                                                       // 10%
+  "algeria": -5.5,                                                     // 10–15%
+  "mauritania": -5.5,                                                  // 12–15%
+  "senegal": -8,                                                       // 10%
+  "the gambia": -10.5,                                                 // 7.5% → mid ~7.5%
+  "gambia": -10.5,
+  "cape verde": -10.5,                                                 // 5–10%
+  "mali": -8,                                                          // 10%
+  "niger": -8,
+  "nigeria": -8,                                                       // 10%
+  "ghana": -10.5,                                                      // 5–10%
+  "côte d'ivoire": -8, "ivory coast": -8, "cote d'ivoire": -8,        // 10%
+  "cameroon": -5.5,                                                    // 10–15%
+  "equatorial guinea": -8,                                             // 10%
+  "gabon": -8,                                                         // 10%
+  "angola": -8,                                                        // 10%
+  "congo": -8,   "republic of the congo": -8,  "drc": -8,             // 10%
+  "namibia": -8,                                                       // 10%
+  "botswana": -8,                                                      // 10%
+  "south africa": -8,                                                  // 10%
+  "ethiopia": -10.5,                                                   // 5–10%
+  "kenya": -8,                                                         // 10%
+  "tanzania": -8,                                                      // 10%
+  "seychelles": -8,                                                    // 10%
+  "madagascar": -10.5,                                                 // 5–10%
+  "zimbabwe": -8,                                                      // 10%
+  "eswatini": -8,  "swaziland": -8,                                   // 10%
+  "mauritius": -5.5,                                                   // 10–15%
+  "djibouti": -18,                                                     // No tip
+  "eritrea": -18,
 
   // ── South & Central Asia ──────────────────────────────────────────────────
-  "india": 8.5,                                                        // 7–10%
-  "nepal": 10,
-  "bhutan": 0,
-  "sri lanka": 10,
-  "bangladesh": 6,                                                     // 2–10%
-  "maldives": 12.5,                                                    // 10–15%
-  "pakistan": 0,
-  "afghanistan": 0,
-  "uzbekistan": 0,  "tajikistan": 0,  "turkmenistan": 7.5,
-  "kazakhstan": 0,
-  "georgia": 15,                                                       // 10–20%
-  "armenia": 15,                                                       // 10–20%
-  "azerbaijan": 0,
+  "india": -11,                                                        // 7–10% → mid ~8.5%
+  "nepal": -8,                                                         // 10%
+  "bhutan": -18,                                                       // No tipping custom
+  "sri lanka": -8,                                                     // 10%
+  "bangladesh": -13.5,                                                 // 2–10% → mid ~6%
+  "maldives": -5.5,                                                    // 10–15%
+  "pakistan": -18,                                                     // No tipping norm
+  "afghanistan": -18,
+  "uzbekistan": -18,  "tajikistan": -18,  "turkmenistan": -10.5,       // 5–10%
+  "kazakhstan": -18,
+  "georgia": -5.5,                                                     // 10–20%
+  "armenia": -8,                                                       // 10–20%
+  "azerbaijan": -18,                                                   // No tip common
 
   // ── East & Southeast Asia ─────────────────────────────────────────────────
-  "china": 0,                                                          // Can be rude
-  "mongolia": 10,
-  "japan": 0,                                                          // Considered rude
-  "south korea": 0,  "korea": 0,
-  "taiwan": 0,
-  "thailand": 10,
-  "myanmar": 10,
-  "laos": 0,
-  "cambodia": 0,
-  "vietnam": 7.5,                                                      // 5–10%
-  "malaysia": 0,                                                       // Service charge included
-  "singapore": 0,                                                      // Service charge included
-  "indonesia": 7.5,                                                    // 5–10%
-  "philippines": 10,
-  "hong kong": 0,                                                      // Service charge included
-  "brunei": 0,
+  "china": -18,                                                        // No tip (can be rude)
+  "mongolia": -8,                                                      // 10%
+  "japan": -18,                                                        // No tipping — considered rude
+  "south korea": -18,  "korea": -18,                                   // No tipping
+  "taiwan": -18,                                                       // No tipping
+  "thailand": -8,                                                      // 10%
+  "myanmar": -8,                                                       // 10%
+  "laos": -18,
+  "cambodia": -18,                                                     // No tip norm shown
+  "vietnam": -10.5,                                                    // 5–10%
+  "malaysia": -18,                                                     // Service charge included
+  "singapore": -18,                                                    // Service charge included (10% auto-added)
+  "indonesia": -10.5,                                                  // 5–10%
+  "philippines": -8,                                                   // 10%
+  "hong kong": -18,                                                    // Service charge included
+  "brunei": -18,
 
   // ── Oceania ───────────────────────────────────────────────────────────────
-  "australia": 0,                                                      // Not standard
-  "new zealand": 0,
-  "fiji": 0,
-  "samoa": 0,
-  "vanuatu": 10,
-  "marshall islands": 7.5,                                             // 5–10%
+  "australia": -18,                                                    // No standard tipping
+  "new zealand": -18,                                                  // No standard tipping
+  "fiji": -18,
+  "samoa": -18,
+  "vanuatu": -8,                                                       // 10%
+  "marshall islands": -10.5,                                           // 5–10%
 };
 
-// Returns the absolute typical tip % for a country (0 = no tipping expected)
-// Default 10 = most common global norm for unknown countries
 export function getCountryAdj(country) {
   if (!country) return 0;
   const key = country.trim().toLowerCase();
-  return COUNTRY_NORMS[key] ?? 10;
+  return COUNTRY_ADJUSTMENTS[key] ?? -8; // default: ~10% is the most common international norm
 }
 
 // Budget mode multiplier — brings percentages down to the lower end of acceptable norms.

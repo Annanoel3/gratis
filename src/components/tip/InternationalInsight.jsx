@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Globe, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function InternationalInsight({ country, onReadyToCalculate, onTipAdjOverride }) {
+export default function InternationalInsight({ country, onReadyToCalculate }) {
   const [insight, setInsight] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -27,24 +27,18 @@ export default function InternationalInsight({ country, onReadyToCalculate, onTi
         prompt: `The user is in ${trimmed}. In 2–4 sentences, explain:
 1. Whether tipping is customary, optional, or considered rude/offensive in ${trimmed}.
 2. The cultural philosophy behind it — why does tipping work (or not work) that way there? Be warm, curious, and illuminating, not preachy. If tipping is rare or discouraged, celebrate the dignity of that system. If it's common, give the local norms (typical %, cash vs. card, etc.).
-Keep it conversational and insightful. No bullet points — flowing prose only.
-Also provide a typical_tip_percent: the single most common tip percentage for a restaurant in ${trimmed} (use 0 if tipping is not done, use the midpoint of any range like 10 for "10-15%").`,
+Keep it conversational and insightful. No bullet points — flowing prose only.`,
         response_json_schema: {
           type: "object",
           properties: {
             headline: { type: "string" },
             body: { type: "string" },
             tip_norm: { type: "string", enum: ["none", "optional", "expected"] },
-            typical_tip_percent: { type: "number" },
           },
         },
       });
       setInsight(res);
       setLoading(false);
-      // Pass the AI-researched absolute tip % back up so the calculator uses it directly
-      if (onTipAdjOverride && typeof res.typical_tip_percent === "number") {
-        onTipAdjOverride(res.typical_tip_percent);
-      }
     }, 800);
 
     return () => clearTimeout(timer);
