@@ -5,20 +5,21 @@ const AD_DELAY_MS = 15000;
 let AdMob = null;
 let isNative = false;
 
-async function loadCapacitor() {
+async function loadAdMob() {
   try {
-    const { Capacitor, registerPlugin } = await import('@capacitor/core');
+    const { Capacitor } = await import('@capacitor/core');
     isNative = Capacitor.isNativePlatform();
     if (isNative) {
-      AdMob = registerPlugin('AdMob');
+      const mod = await import('@capacitor-community/admob');
+      AdMob = mod.AdMob;
     }
   } catch {
-    // Not a native environment, ignore
+    // Not a native environment or package unavailable
   }
 }
 
 export async function initAdMob() {
-  await loadCapacitor();
+  await loadAdMob();
   if (!isNative || !AdMob) return;
   try {
     await AdMob.initialize({ initializeForTesting: false });
@@ -51,10 +52,8 @@ export async function maybeShowAdOnOpen() {
   localStorage.setItem('appOpenCount', String(count));
 
   if (count % SHOW_EVERY_N_OPENS === 0) {
-    // Wait initial delay
     await new Promise(resolve => setTimeout(resolve, AD_DELAY_MS));
 
-    // Check if an input is currently focused; if so, wait until it's blurred
     if (isInputFocused()) {
       await new Promise((resolve) => {
         const checkInput = () => {
