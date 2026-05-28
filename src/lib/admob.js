@@ -1,6 +1,6 @@
 const AD_UNIT_ID = 'ca-app-pub-7979856440890193/1081172636';
 const SHOW_EVERY_N_OPENS = 3;
-const AD_DELAY_MS = 15000;
+const AD_DELAY_MS = 30000;
 
 let AdMob = null;
 let isNative = false;
