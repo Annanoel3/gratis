@@ -8,8 +8,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from '@/pages/Home';
 import Legal from '@/pages/Legal';
 import { SettingsProvider } from '@/lib/SettingsContext';
-import { initAdMob, maybeShowAdOnOpen } from '@/lib/admob';
-import { useEffect } from 'react';
+import AdManager from './components/shared/AdManager';
 
 // Sentry loaded via CDN in index.html
 const Sentry = window.Sentry;
@@ -55,18 +54,6 @@ const AuthenticatedApp = () => {
 
 
 function App() {
-  useEffect(() => {
-    // Track app opens and suppress ads on first launch
-    const openCount = parseInt(localStorage.getItem('appOpenCount') || '0', 10);
-    const newCount = openCount + 1;
-    localStorage.setItem('appOpenCount', newCount.toString());
-
-    // Only initialize ads if this is not the first app launch
-    if (newCount >= 2) {
-      initAdMob().then(() => maybeShowAdOnOpen());
-    }
-  }, []);
-
   return (
     <SettingsProvider>
       <AuthProvider>
@@ -74,6 +61,7 @@ function App() {
           <Router>
             <AuthenticatedApp />
           </Router>
+          <AdManager />
           <Toaster />
         </QueryClientProvider>
       </AuthProvider>
