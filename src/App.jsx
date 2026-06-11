@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -54,6 +55,21 @@ const AuthenticatedApp = () => {
 
 
 function App() {
+  useEffect(() => {
+    if (!window.Capacitor?.isNativePlatform?.()) return;
+    const CapApp = window.Capacitor?.Plugins?.App;
+    if (!CapApp) return;
+    let listenerHandle;
+    CapApp.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
+      } else {
+        CapApp.exitApp();
+      }
+    }).then(handle => { listenerHandle = handle; });
+    return () => { listenerHandle?.remove(); };
+  }, []);
+
   return (
     <SettingsProvider>
       <AuthProvider>
